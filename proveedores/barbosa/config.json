@@ -1,0 +1,24 @@
+{
+  "nombre": "Refrigeración Barbosa",
+  "base_url": "https://refrigeracionbarbosa.com",
+  "sitemap_urls": [
+    "https://refrigeracionbarbosa.com/product-sitemap.xml",
+    "https://refrigeracionbarbosa.com/product-sitemap2.xml",
+    "https://refrigeracionbarbosa.com/product-sitemap3.xml",
+    "https://refrigeracionbarbosa.com/product-sitemap4.xml",
+    "https://refrigeracionbarbosa.com/product-sitemap5.xml",
+    "https://refrigeracionbarbosa.com/product-sitemap6.xml"
+  ],
+  "rate_limit_segundos": 1.0,
+  "max_retries": 3,
+  "timeout_request": 15,
+  "user_agent": "CatalogoScraper/1.0 (ferreteria-local)",
+  "piloto": {
+    "activo": false,
+    "categoria_slug": "picos-para-soldar",
+    "max_productos": 20
+  },
+  "descargar_imagenes": true,
+  "formato_imagen": "jpg",
+  "workers_imagenes": 3
+}

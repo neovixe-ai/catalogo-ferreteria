@@ -1,0 +1,296 @@
+2026-08-22 05:28:22,799 [INFO] ============================================================
+2026-08-22 05:28:22,800 [INFO] SCRAPER: Refrigeración Barbosa
+2026-08-22 05:28:22,800 [INFO] Modo: PILOTO
+2026-08-22 05:28:22,800 [INFO] ============================================================
+2026-08-22 05:28:22,829 [INFO] 
+Paso 1: Obteniendo URLs de productos...
+2026-08-22 05:28:22,829 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap.xml
+2026-08-22 05:28:25,597 [INFO]   Encontradas 1000 URLs en sitemaps
+2026-08-22 05:28:25,598 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap2.xml
+2026-08-22 05:28:27,826 [INFO]   Encontradas 2000 URLs en sitemaps
+2026-08-22 05:28:27,826 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap3.xml
+2026-08-22 05:28:29,972 [INFO]   Encontradas 3000 URLs en sitemaps
+2026-08-22 05:28:29,972 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap4.xml
+2026-08-22 05:28:32,241 [INFO]   Encontradas 4000 URLs en sitemaps
+2026-08-22 05:28:32,241 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap5.xml
+2026-08-22 05:28:35,000 [INFO]   Encontradas 5000 URLs en sitemaps
+2026-08-22 05:28:35,000 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap6.xml
+2026-08-22 05:28:36,036 [INFO]   Encontradas 5131 URLs en sitemaps
+2026-08-22 05:28:36,037 [INFO]   Modo piloto: 0 productos seleccionados
+2026-08-22 05:28:36,037 [INFO]   Total URLs a procesar: 0
+2026-08-22 05:28:36,037 [INFO] 
+Paso 2: Scrapeando productos...
+2026-08-22 05:28:36,037 [INFO] 
+============================================================
+2026-08-22 05:28:36,038 [INFO] COMPLETADO
+2026-08-22 05:28:36,038 [INFO]   Productos guardados: 0
+2026-08-22 05:28:36,038 [INFO]   Total en catálogo:   0
+2026-08-22 05:28:36,038 [INFO]   Categorías:         0
+2026-08-22 05:28:36,038 [INFO]   Imágenes:           0
+2026-08-22 05:28:36,038 [INFO]   Base de datos:      /data/data/com.termux/files/home/catalogo-ferreteria/proveedores/barbosa/catalogo.db
+2026-08-22 05:28:36,038 [INFO] ============================================================
+2026-08-22 05:29:26,484 [INFO] ============================================================
+2026-08-22 05:29:26,484 [INFO] SCRAPER: Refrigeración Barbosa
+2026-08-22 05:29:26,484 [INFO] Modo: PILOTO
+2026-08-22 05:29:26,484 [INFO] ============================================================
+2026-08-22 05:29:26,503 [INFO] 
+Paso 1: Obteniendo URLs de productos...
+2026-08-22 05:29:26,504 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap.xml
+2026-08-22 05:29:28,873 [INFO]   Encontradas 1000 URLs en sitemaps
+2026-08-22 05:29:28,873 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap2.xml
+2026-08-22 05:29:30,798 [INFO]   Encontradas 2000 URLs en sitemaps
+2026-08-22 05:29:30,799 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap3.xml
+2026-08-22 05:29:33,384 [INFO]   Encontradas 3000 URLs en sitemaps
+2026-08-22 05:29:33,384 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap4.xml
+2026-08-22 05:29:35,613 [INFO]   Encontradas 4000 URLs en sitemaps
+2026-08-22 05:29:35,614 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap5.xml
+2026-08-22 05:29:37,766 [INFO]   Encontradas 5000 URLs en sitemaps
+2026-08-22 05:29:37,767 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap6.xml
+2026-08-22 05:29:38,812 [INFO]   Encontradas 5131 URLs en sitemaps
+2026-08-22 05:29:38,813 [INFO]   Modo piloto: 20 productos seleccionados
+2026-08-22 05:29:38,813 [INFO]   Total URLs a procesar: 20
+2026-08-22 05:29:38,813 [INFO] 
+Paso 2: Scrapeando productos...
+2026-08-22 05:29:38,813 [INFO]   [1/20] https://refrigeracionbarbosa.com/producto/correa-lavadora-3l-260/
+2026-08-22 05:29:40,510 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:29:42,511 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:29:46,513 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:29:55,078 [DEBUG]   Imagen descargada: images/13-13722_galeria_1.jpg
+2026-08-22 05:29:55,082 [INFO]     OK: Correa Lavadora 3L-260
+2026-08-22 05:29:55,082 [INFO]   [2/20] https://refrigeracionbarbosa.com/producto/compresor-1-2hp-r134a-110v-alta-caj4461y-tecumseh/
+2026-08-22 05:29:57,476 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:29:59,477 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:30:03,479 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:30:12,374 [DEBUG]   Imagen descargada: images/18-024461Y_galeria_1.jpg
+2026-08-22 05:30:12,377 [INFO]     OK: Compresor 1/2HP R134a 110V Alta CAJ4461Y Tecumseh
+2026-08-22 05:30:12,377 [INFO]   [3/20] https://refrigeracionbarbosa.com/producto/compresor-1-2hp-r134a-110v-alta-caj4461a-tecumseh/
+2026-08-22 05:30:15,187 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:30:17,188 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:30:21,189 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:30:29,903 [DEBUG]   Imagen descargada: images/18-024461_galeria_1.jpg
+2026-08-22 05:30:29,906 [INFO]     OK: Compresor 1/2HP R134a 110V Alta CAJ4461A Tecumseh
+2026-08-22 05:30:29,907 [INFO]   [4/20] https://refrigeracionbarbosa.com/producto/compresor-1-6hp-r134a-110v-fn57q12g-wanbao/
+2026-08-22 05:30:32,283 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:30:34,284 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:30:38,285 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:30:46,925 [DEBUG]   Imagen descargada: images/18-05205_galeria_1.jpg
+2026-08-22 05:30:46,928 [INFO]     OK: Compresor 1/6HP R134a 110V FN57Q12G Wanbao
+2026-08-22 05:30:46,929 [INFO]   [5/20] https://refrigeracionbarbosa.com/producto/compresor-3-4hp-r134a-220v-alta-caj4492y-tecumseh/
+2026-08-22 05:30:51,201 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:30:53,202 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:30:57,204 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:31:05,954 [DEBUG]   Imagen descargada: images/18-024492Y_galeria_1.jpg
+2026-08-22 05:31:05,960 [INFO]     OK: Compresor 3/4HP R134a 220V Alta CAJ4492Y Tecumseh
+2026-08-22 05:31:05,961 [INFO]   [6/20] https://refrigeracionbarbosa.com/producto/compresor-1hp-r12-220v-monofasico-caj4511a-tecumseh/
+2026-08-22 05:31:07,868 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:31:09,870 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:31:13,871 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:31:22,500 [DEBUG]   Imagen descargada: images/18-024511_galeria_1.jpg
+2026-08-22 05:31:22,505 [INFO]     OK: Compresor 1HP R12 220V Monofásico CAJ4511A Tecumse
+2026-08-22 05:31:22,506 [INFO]   [7/20] https://refrigeracionbarbosa.com/producto/polea-motor-secadora-dc93-00634a-samsung/
+2026-08-22 05:31:26,683 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:31:28,684 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:31:32,685 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:31:41,125 [DEBUG]   Imagen descargada: images/003-DC9630064A_galeria_1.jpg
+2026-08-22 05:31:41,129 [INFO]     OK: Polea Motor Secadora DC93-00634A Samsung
+2026-08-22 05:31:41,129 [INFO]   [8/20] https://refrigeracionbarbosa.com/producto/polea-lavadora-131498301-frigidaire-electrolux-2/
+2026-08-22 05:31:46,222 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:31:48,223 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:31:52,225 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:32:01,075 [DEBUG]   Imagen descargada: images/001-131498301_galeria_1.jpg
+2026-08-22 05:32:01,080 [INFO]     OK: Polea Lavadora 131498301 Frigidaire Electrolux
+2026-08-22 05:32:01,080 [INFO]   [9/20] https://refrigeracionbarbosa.com/producto/rolinera-6205-134780500/
+2026-08-22 05:32:03,755 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:32:05,757 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:32:09,759 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:32:18,302 [DEBUG]   Imagen descargada: images/001-131000_galeria_1.jpg
+2026-08-22 05:32:18,306 [INFO]     OK: Rolinera Ratchet Lavadora 6205 134780500 Frigidair
+2026-08-22 05:32:18,307 [INFO]   [10/20] https://refrigeracionbarbosa.com/producto/switch-start-secadora-we4m416-mabe-ge/
+2026-08-22 05:32:19,761 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 1)
+2026-08-22 05:32:21,763 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 2)
+2026-08-22 05:32:25,765 [WARNING]   Error de conexión: No connection adapters were found for "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3C/svg%3E" (intento 3)
+2026-08-22 05:32:34,208 [DEBUG]   Imagen descargada: images/001-WE4M416_galeria_1.jpg
+2026-08-22 05:32:34,211 [INFO]     OK: Switch Start Secadora WE4M416 Mabe GE
+2026-08-22 05:32:34,212 [INFO]   [11/20] https://refrigeracionbarbosa.com/producto/soporte-lavadora-350044-whirlpool/
+2026-08-22 05:33:29,948 [INFO] ============================================================
+2026-08-22 05:33:29,948 [INFO] SCRAPER: Refrigeración Barbosa
+2026-08-22 05:33:29,949 [INFO] Modo: PILOTO
+2026-08-22 05:33:29,949 [INFO] ============================================================
+2026-08-22 05:33:29,969 [INFO] 
+Paso 1: Obteniendo URLs de productos...
+2026-08-22 05:33:29,969 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap.xml
+2026-08-22 05:33:33,220 [INFO]   Encontradas 1000 URLs en sitemaps
+2026-08-22 05:33:33,220 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap2.xml
+2026-08-22 05:33:35,641 [INFO]   Encontradas 2000 URLs en sitemaps
+2026-08-22 05:33:35,641 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap3.xml
+2026-08-22 05:33:37,810 [INFO]   Encontradas 3000 URLs en sitemaps
+2026-08-22 05:33:37,810 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap4.xml
+2026-08-22 05:33:40,471 [INFO]   Encontradas 4000 URLs en sitemaps
+2026-08-22 05:33:40,471 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap5.xml
+2026-08-22 05:33:42,723 [INFO]   Encontradas 5000 URLs en sitemaps
+2026-08-22 05:33:42,723 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap6.xml
+2026-08-22 05:33:43,602 [INFO]   Encontradas 5131 URLs en sitemaps
+2026-08-22 05:33:43,602 [INFO]   Modo piloto: 20 productos seleccionados
+2026-08-22 05:33:43,602 [INFO]   Total URLs a procesar: 20
+2026-08-22 05:33:43,603 [INFO] 
+Paso 2: Scrapeando productos...
+2026-08-22 05:33:43,603 [INFO]   [1/20] https://refrigeracionbarbosa.com/producto/correa-lavadora-3l-260/
+2026-08-22 05:33:45,047 [DEBUG]   Imagen descargada: images/13-13722_galeria_1.jpg
+2026-08-22 05:33:45,050 [INFO]     OK: Correa Lavadora 3L-260
+2026-08-22 05:33:45,050 [INFO]   [2/20] https://refrigeracionbarbosa.com/producto/compresor-1-2hp-r134a-110v-alta-caj4461y-tecumseh/
+2026-08-22 05:33:47,883 [DEBUG]   Imagen descargada: images/18-024461Y_galeria_1.jpg
+2026-08-22 05:33:47,886 [INFO]     OK: Compresor 1/2HP R134a 110V Alta CAJ4461Y Tecumseh
+2026-08-22 05:33:47,887 [INFO]   [3/20] https://refrigeracionbarbosa.com/producto/compresor-1-2hp-r134a-110v-alta-caj4461a-tecumseh/
+2026-08-22 05:33:49,801 [DEBUG]   Imagen descargada: images/18-024461_galeria_1.jpg
+2026-08-22 05:33:49,805 [INFO]     OK: Compresor 1/2HP R134a 110V Alta CAJ4461A Tecumseh
+2026-08-22 05:33:49,805 [INFO]   [4/20] https://refrigeracionbarbosa.com/producto/compresor-1-6hp-r134a-110v-fn57q12g-wanbao/
+2026-08-22 05:33:51,783 [DEBUG]   Imagen descargada: images/18-05205_galeria_1.jpg
+2026-08-22 05:33:51,784 [INFO]     OK: Compresor 1/6HP R134a 110V FN57Q12G Wanbao
+2026-08-22 05:33:51,784 [INFO]   [5/20] https://refrigeracionbarbosa.com/producto/compresor-3-4hp-r134a-220v-alta-caj4492y-tecumseh/
+2026-08-22 05:33:55,349 [DEBUG]   Imagen descargada: images/18-024492Y_galeria_1.jpg
+2026-08-22 05:33:55,351 [INFO]     OK: Compresor 3/4HP R134a 220V Alta CAJ4492Y Tecumseh
+2026-08-22 05:33:55,351 [INFO]   [6/20] https://refrigeracionbarbosa.com/producto/compresor-1hp-r12-220v-monofasico-caj4511a-tecumseh/
+2026-08-22 05:33:56,899 [DEBUG]   Imagen descargada: images/18-024511_galeria_1.jpg
+2026-08-22 05:33:56,902 [INFO]     OK: Compresor 1HP R12 220V Monofásico CAJ4511A Tecumse
+2026-08-22 05:33:56,902 [INFO]   [7/20] https://refrigeracionbarbosa.com/producto/polea-motor-secadora-dc93-00634a-samsung/
+2026-08-22 05:33:58,886 [DEBUG]   Imagen descargada: images/003-DC9630064A_galeria_1.jpg
+2026-08-22 05:33:58,889 [INFO]     OK: Polea Motor Secadora DC93-00634A Samsung
+2026-08-22 05:33:58,889 [INFO]   [8/20] https://refrigeracionbarbosa.com/producto/polea-lavadora-131498301-frigidaire-electrolux-2/
+2026-08-22 05:34:00,674 [DEBUG]   Imagen descargada: images/001-131498301_galeria_1.jpg
+2026-08-22 05:34:00,676 [INFO]     OK: Polea Lavadora 131498301 Frigidaire Electrolux
+2026-08-22 05:34:00,676 [INFO]   [9/20] https://refrigeracionbarbosa.com/producto/rolinera-6205-134780500/
+2026-08-22 05:34:02,762 [DEBUG]   Imagen descargada: images/001-131000_galeria_1.jpg
+2026-08-22 05:34:02,765 [INFO]     OK: Rolinera Ratchet Lavadora 6205 134780500 Frigidair
+2026-08-22 05:34:02,765 [INFO]   [10/20] https://refrigeracionbarbosa.com/producto/switch-start-secadora-we4m416-mabe-ge/
+2026-08-22 05:34:05,335 [DEBUG]   Imagen descargada: images/001-WE4M416_galeria_1.jpg
+2026-08-22 05:34:05,338 [INFO]     OK: Switch Start Secadora WE4M416 Mabe GE
+2026-08-22 05:34:05,338 [INFO]   [11/20] https://refrigeracionbarbosa.com/producto/soporte-lavadora-350044-whirlpool/
+2026-08-22 05:34:07,373 [DEBUG]   Imagen descargada: images/001-350044_galeria_1.jpg
+2026-08-22 05:34:07,376 [INFO]     OK: Soporte Lavadora 350044 Whirlpool
+2026-08-22 05:34:07,377 [INFO]   [12/20] https://refrigeracionbarbosa.com/producto/switch-puerta-lavadora-359807-whirlpool/
+2026-08-22 05:34:10,353 [DEBUG]   Imagen descargada: images/001-359807_galeria_1.jpg
+2026-08-22 05:34:10,356 [INFO]     OK: Switch Puerta Lavadora 359807 Whirlpool
+2026-08-22 05:34:10,356 [INFO]   [13/20] https://refrigeracionbarbosa.com/producto/anillo-lavadora-387868-whirlpool/
+2026-08-22 05:34:13,531 [DEBUG]   Imagen descargada: images/001-387868_galeria_1.jpg
+2026-08-22 05:34:13,533 [INFO]     OK: Anillo Lavadora 387868 Whirlpool
+2026-08-22 05:34:13,534 [INFO]   [14/20] https://refrigeracionbarbosa.com/producto/resorte-lavadora-388492-whirlpool/
+2026-08-22 05:34:16,396 [DEBUG]   Imagen descargada: images/001-388492_galeria_1.jpg
+2026-08-22 05:34:16,399 [INFO]     OK: Resorte Lavadora 388492 Whirlpool
+2026-08-22 05:34:16,399 [INFO]   [15/20] https://refrigeracionbarbosa.com/producto/base-engranaje-lavadora-389229-whirlpool/
+2026-08-22 05:34:21,207 [DEBUG]   Imagen descargada: images/001-389229_galeria_1.jpg
+2026-08-22 05:34:21,209 [INFO]     OK: Base Engranaje Lavadora 389229 Whirlpool
+2026-08-22 05:34:21,209 [INFO]   [16/20] https://refrigeracionbarbosa.com/producto/valvula-lavadora-302411200037-daewoo/
+2026-08-22 05:34:22,971 [DEBUG]   Imagen descargada: images/001-30241120003_galeria_1.jpg
+2026-08-22 05:34:22,975 [INFO]     OK: Válvula Lavadora 302411200037 Daewoo
+2026-08-22 05:34:22,975 [INFO]   [17/20] https://refrigeracionbarbosa.com/producto/manguera-tina-bomba-lavadora-ew907/
+2026-08-22 05:34:28,581 [DEBUG]   Imagen descargada: images/001-32044_galeria_1.jpg
+2026-08-22 05:34:28,585 [INFO]     OK: Manguera Tina Bomba Lavadora EW907
+2026-08-22 05:34:28,585 [INFO]   [18/20] https://refrigeracionbarbosa.com/producto/perilla-lavadora-320440-whirlpool/
+2026-08-22 05:34:30,527 [DEBUG]   Imagen descargada: images/001-320440_galeria_1.jpg
+2026-08-22 05:34:30,530 [INFO]     OK: Perilla Lavadora 320440 Whirlpool
+2026-08-22 05:34:30,530 [INFO]   [19/20] https://refrigeracionbarbosa.com/producto/resorte-polea-lavadora-3204425-frigidaire/
+2026-08-22 05:34:33,477 [DEBUG]   Imagen descargada: images/001-3204425_galeria_1.png
+2026-08-22 05:34:33,483 [INFO]     OK: Resorte Polea Lavadora 3204425 Frigidaire
+2026-08-22 05:34:33,484 [INFO]   [20/20] https://refrigeracionbarbosa.com/producto/resorte-polea-lavadora-3204428-frigidaire/
+2026-08-22 05:34:35,954 [DEBUG]   Imagen descargada: images/001-3204428_galeria_1.jpg
+2026-08-22 05:34:35,956 [INFO]     OK: Resorte Polea Lavadora 3204428 Frigidaire
+2026-08-22 05:34:35,958 [INFO] 
+============================================================
+2026-08-22 05:34:35,958 [INFO] COMPLETADO
+2026-08-22 05:34:35,958 [INFO]   Productos guardados: 20
+2026-08-22 05:34:35,958 [INFO]   Total en catálogo:   20
+2026-08-22 05:34:35,958 [INFO]   Categorías:         14
+2026-08-22 05:34:35,958 [INFO]   Imágenes:           20
+2026-08-22 05:34:35,959 [INFO]   Base de datos:      /data/data/com.termux/files/home/catalogo-ferreteria/proveedores/barbosa/catalogo.db
+2026-08-22 05:34:35,959 [INFO] ============================================================
+2026-08-22 05:36:30,953 [INFO] ============================================================
+2026-08-22 05:36:30,953 [INFO] SCRAPER: Refrigeración Barbosa
+2026-08-22 05:36:30,953 [INFO] Modo: PILOTO
+2026-08-22 05:36:30,953 [INFO] ============================================================
+2026-08-22 05:36:30,974 [INFO] 
+Paso 1: Obteniendo URLs de productos...
+2026-08-22 05:36:30,974 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap.xml
+2026-08-22 05:36:34,064 [INFO]   Encontradas 1000 URLs en sitemaps
+2026-08-22 05:36:34,064 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap2.xml
+2026-08-22 05:36:36,403 [INFO]   Encontradas 2000 URLs en sitemaps
+2026-08-22 05:36:36,403 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap3.xml
+2026-08-22 05:36:39,067 [INFO]   Encontradas 3000 URLs en sitemaps
+2026-08-22 05:36:39,067 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap4.xml
+2026-08-22 05:36:41,627 [INFO]   Encontradas 4000 URLs en sitemaps
+2026-08-22 05:36:41,628 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap5.xml
+2026-08-22 05:36:44,284 [INFO]   Encontradas 5000 URLs en sitemaps
+2026-08-22 05:36:44,284 [INFO] Descargando sitemap: https://refrigeracionbarbosa.com/product-sitemap6.xml
+2026-08-22 05:36:45,421 [INFO]   Encontradas 5131 URLs en sitemaps
+2026-08-22 05:36:45,422 [INFO]   Modo piloto: 20 productos seleccionados
+2026-08-22 05:36:45,422 [INFO]   Total URLs a procesar: 20
+2026-08-22 05:36:45,422 [INFO] 
+Paso 2: Scrapeando productos...
+2026-08-22 05:36:45,422 [INFO]   [1/20] https://refrigeracionbarbosa.com/producto/correa-lavadora-3l-260/
+2026-08-22 05:36:47,787 [DEBUG]   Imagen descargada: images/13-13722.jpg
+2026-08-22 05:36:47,788 [INFO]     OK: Correa Lavadora 3L-260
+2026-08-22 05:36:47,789 [INFO]   [2/20] https://refrigeracionbarbosa.com/producto/compresor-1-2hp-r134a-110v-alta-caj4461y-tecumseh/
+2026-08-22 05:36:50,034 [DEBUG]   Imagen descargada: images/18-024461Y.jpg
+2026-08-22 05:36:50,037 [INFO]     OK: Compresor 1/2HP R134a 110V Alta CAJ4461Y Tecumseh
+2026-08-22 05:36:50,038 [INFO]   [3/20] https://refrigeracionbarbosa.com/producto/compresor-1-2hp-r134a-110v-alta-caj4461a-tecumseh/
+2026-08-22 05:36:51,625 [DEBUG]   Imagen descargada: images/18-024461.jpg
+2026-08-22 05:36:51,629 [INFO]     OK: Compresor 1/2HP R134a 110V Alta CAJ4461A Tecumseh
+2026-08-22 05:36:51,629 [INFO]   [4/20] https://refrigeracionbarbosa.com/producto/compresor-1-6hp-r134a-110v-fn57q12g-wanbao/
+2026-08-22 05:36:53,944 [DEBUG]   Imagen descargada: images/18-05205.jpg
+2026-08-22 05:36:53,947 [INFO]     OK: Compresor 1/6HP R134a 110V FN57Q12G Wanbao
+2026-08-22 05:36:53,948 [INFO]   [5/20] https://refrigeracionbarbosa.com/producto/compresor-3-4hp-r134a-220v-alta-caj4492y-tecumseh/
+2026-08-22 05:36:55,930 [DEBUG]   Imagen descargada: images/18-024492Y.jpg
+2026-08-22 05:36:55,934 [INFO]     OK: Compresor 3/4HP R134a 220V Alta CAJ4492Y Tecumseh
+2026-08-22 05:36:55,935 [INFO]   [6/20] https://refrigeracionbarbosa.com/producto/compresor-1hp-r12-220v-monofasico-caj4511a-tecumseh/
+2026-08-22 05:36:58,409 [DEBUG]   Imagen descargada: images/18-024511.jpg
+2026-08-22 05:36:58,413 [INFO]     OK: Compresor 1HP R12 220V Monofásico CAJ4511A Tecumse
+2026-08-22 05:36:58,414 [INFO]   [7/20] https://refrigeracionbarbosa.com/producto/polea-motor-secadora-dc93-00634a-samsung/
+2026-08-22 05:37:00,273 [DEBUG]   Imagen descargada: images/003-DC9630064A.jpg
+2026-08-22 05:37:00,276 [INFO]     OK: Polea Motor Secadora DC93-00634A Samsung
+2026-08-22 05:37:00,276 [INFO]   [8/20] https://refrigeracionbarbosa.com/producto/polea-lavadora-131498301-frigidaire-electrolux-2/
+2026-08-22 05:37:02,393 [DEBUG]   Imagen descargada: images/001-131498301.jpg
+2026-08-22 05:37:02,397 [INFO]     OK: Polea Lavadora 131498301 Frigidaire Electrolux
+2026-08-22 05:37:02,397 [INFO]   [9/20] https://refrigeracionbarbosa.com/producto/rolinera-6205-134780500/
+2026-08-22 05:37:05,072 [DEBUG]   Imagen descargada: images/001-131000.jpg
+2026-08-22 05:37:05,077 [INFO]     OK: Rolinera Ratchet Lavadora 6205 134780500 Frigidair
+2026-08-22 05:37:05,077 [INFO]   [10/20] https://refrigeracionbarbosa.com/producto/switch-start-secadora-we4m416-mabe-ge/
+2026-08-22 05:37:07,028 [DEBUG]   Imagen descargada: images/001-WE4M416.jpg
+2026-08-22 05:37:07,031 [INFO]     OK: Switch Start Secadora WE4M416 Mabe GE
+2026-08-22 05:37:07,031 [INFO]   [11/20] https://refrigeracionbarbosa.com/producto/soporte-lavadora-350044-whirlpool/
+2026-08-22 05:37:09,047 [DEBUG]   Imagen descargada: images/001-350044.jpg
+2026-08-22 05:37:09,050 [INFO]     OK: Soporte Lavadora 350044 Whirlpool
+2026-08-22 05:37:09,051 [INFO]   [12/20] https://refrigeracionbarbosa.com/producto/switch-puerta-lavadora-359807-whirlpool/
+2026-08-22 05:37:11,098 [DEBUG]   Imagen descargada: images/001-359807.jpg
+2026-08-22 05:37:11,101 [INFO]     OK: Switch Puerta Lavadora 359807 Whirlpool
+2026-08-22 05:37:11,102 [INFO]   [13/20] https://refrigeracionbarbosa.com/producto/anillo-lavadora-387868-whirlpool/
+2026-08-22 05:37:13,150 [DEBUG]   Imagen descargada: images/001-387868.jpg
+2026-08-22 05:37:13,154 [INFO]     OK: Anillo Lavadora 387868 Whirlpool
+2026-08-22 05:37:13,154 [INFO]   [14/20] https://refrigeracionbarbosa.com/producto/resorte-lavadora-388492-whirlpool/
+2026-08-22 05:37:14,986 [DEBUG]   Imagen descargada: images/001-388492.jpg
+2026-08-22 05:37:14,989 [INFO]     OK: Resorte Lavadora 388492 Whirlpool
+2026-08-22 05:37:14,989 [INFO]   [15/20] https://refrigeracionbarbosa.com/producto/base-engranaje-lavadora-389229-whirlpool/
+2026-08-22 05:37:17,136 [DEBUG]   Imagen descargada: images/001-389229.jpg
+2026-08-22 05:37:17,139 [INFO]     OK: Base Engranaje Lavadora 389229 Whirlpool
+2026-08-22 05:37:17,140 [INFO]   [16/20] https://refrigeracionbarbosa.com/producto/valvula-lavadora-302411200037-daewoo/
+2026-08-22 05:37:18,915 [DEBUG]   Imagen descargada: images/001-30241120003.jpg
+2026-08-22 05:37:18,919 [INFO]     OK: Válvula Lavadora 302411200037 Daewoo
+2026-08-22 05:37:18,920 [INFO]   [17/20] https://refrigeracionbarbosa.com/producto/manguera-tina-bomba-lavadora-ew907/
+2026-08-22 05:37:21,370 [DEBUG]   Imagen descargada: images/001-32044.jpg
+2026-08-22 05:37:21,376 [INFO]     OK: Manguera Tina Bomba Lavadora EW907
+2026-08-22 05:37:21,376 [INFO]   [18/20] https://refrigeracionbarbosa.com/producto/perilla-lavadora-320440-whirlpool/
+2026-08-22 05:37:23,328 [DEBUG]   Imagen descargada: images/001-320440.jpg
+2026-08-22 05:37:23,332 [INFO]     OK: Perilla Lavadora 320440 Whirlpool
+2026-08-22 05:37:23,332 [INFO]   [19/20] https://refrigeracionbarbosa.com/producto/resorte-polea-lavadora-3204425-frigidaire/
+2026-08-22 05:37:25,809 [DEBUG]   Imagen descargada: images/001-3204425.png
+2026-08-22 05:37:25,814 [INFO]     OK: Resorte Polea Lavadora 3204425 Frigidaire
+2026-08-22 05:37:25,814 [INFO]   [20/20] https://refrigeracionbarbosa.com/producto/resorte-polea-lavadora-3204428-frigidaire/
+2026-08-22 05:37:27,687 [DEBUG]   Imagen descargada: images/001-3204428.jpg
+2026-08-22 05:37:27,690 [INFO]     OK: Resorte Polea Lavadora 3204428 Frigidaire
+2026-08-22 05:37:27,690 [INFO] 
+============================================================
+2026-08-22 05:37:27,691 [INFO] COMPLETADO
+2026-08-22 05:37:27,691 [INFO]   Productos guardados: 20
+2026-08-22 05:37:27,691 [INFO]   Total en catálogo:   20
+2026-08-22 05:37:27,691 [INFO]   Categorías:         14
+2026-08-22 05:37:27,691 [INFO]   Imágenes:           20
+2026-08-22 05:37:27,691 [INFO]   Base de datos:      /data/data/com.termux/files/home/catalogo-ferreteria/proveedores/barbosa/catalogo.db
+2026-08-22 05:37:27,691 [INFO] ============================================================
