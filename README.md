@@ -12,15 +12,13 @@ catalogo-ferreteria/
 │   └── config_example.json     # Ejemplo de configuración
 │
 ├── importadores/
-│   ├── ferrepunto.js           # Importador → FerrePunto (Node.js)
 │   └── exportar_csv.py         # Exportador → CSV para Excel
 │
 ├── proveedores/
-│   ├── barbosa/                # Refrigeración Barbosa
-│   │   ├── config.json         # Configuración del proveedor
-│   │   ├── catalogo.db         # Catálogo SQLite
-│   │   └── images/             # Imágenes descargadas
-│   └── [nuevo_proveedor]/      # Futuros proveedores
+│   └── mi_proveedor/
+│       ├── config.json         # Configuración del proveedor
+│       ├── catalogo.db         # SQLite con productos
+│       └── images/             # Imágenes descargadas
 │       ├── config.json
 │       ├── catalogo.db
 │       └── images/
@@ -40,10 +38,10 @@ pip install -r scraper/requirements.txt
 
 ```bash
 # Modo piloto (20 productos de prueba)
-python scraper/scraper.py --proveedor barbosa --piloto
+python scraper/scraper.py --proveedor mi_proveedor --piloto
 
 # Catálogo completo
-python scraper/scraper.py --proveedor barbosa
+python scraper/scraper.py --proveedor mi_proveedor
 ```
 
 ### Nuevo proveedor
@@ -53,16 +51,10 @@ python scraper/scraper.py --proveedor barbosa
 3. Editar config.json con los datos del proveedor
 4. Ejecutar: `python scraper/scraper.py --proveedor mi_proveedor`
 
-### Importar a FerrePunto
-
-```bash
-node importadores/ferrepunto.js --proveedor barbosa --token JWT_TOKEN --empresa EMPRESA_ID
-```
-
 ### Exportar a CSV
 
 ```bash
-python importadores/exportar_csv.py --proveedor barbosa
+python importadores/exportar_csv.py --proveedor mi_proveedor
 ```
 
 ## Base de Datos SQLite

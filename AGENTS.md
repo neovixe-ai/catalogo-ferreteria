@@ -2,43 +2,49 @@
 
 ## Contexto
 
-Este es un scraper genérico de catálogos de ferretería. El primer objetivo es completar el scrape del proveedor **Barbosa** (Refrigeración Barbosa, ~5,131 productos). Actualmente hay **904 productos** en la base de datos.
+Este es un scraper genérico de catálogos de ferretería. Descarga productos, imágenes y categorías desde sitios web de proveedores y los guarda en SQLite. Diseñado para ser reutilizable con cualquier proveedor.
 
-## Qué hacer
+## Cómo usar
 
-1. **Continuar el scrape de Barbosa:**
-   ```bash
-   pip install -r scraper/requirements.txt
-   python scraper/scraper.py --proveedor barbosa
-   ```
-   El scraper es idempotente: retoma donde se quedó, no duplica productos ni imágenes.
+### 1. Agregar un nuevo proveedor
 
-2. **Cuando termine (5,131 productos):**
-   ```bash
-   git add -A
-   git commit -m "feat: scrape barbosa completado - 5131 productos"
-   git push origin master
-   ```
+```bash
+# Crear carpeta del proveedor
+mkdir -p proveedores/mi_proveedor/images
 
-3. **Verificar integridad:**
-   ```bash
-   python3 -c "
-   import sqlite3
-   db = sqlite3.connect('proveedores/barbosa/catalogo.db')
-   prods = db.execute('SELECT COUNT(*) FROM productos').fetchone()[0]
-   cats = db.execute('SELECT COUNT(*) FROM categorias').fetchone()[0]
-   imgs = db.execute('SELECT COUNT(*) FROM imagenes').fetchone()[0]
-   print(f'Productos: {prods}/5131 | Categorías: {cats} | Imágenes: {imgs}')
-   db.close()
-   "
-   ```
+# Copiar config de ejemplo
+cp scraper/config_example.json proveedores/mi_proveedor/config.json
+
+# Editar config.json con los datos del proveedor
+# (base_url, sitemap_urls, rate_limit, etc.)
+```
+
+### 2. Ejecutar el scraper
+
+```bash
+pip install -r scraper/requirements.txt
+
+# Modo piloto (20 productos de prueba)
+python scraper/scraper.py --proveedor mi_proveedor --piloto
+
+# Catálogo completo
+python scraper/scraper.py --proveedor mi_proveedor
+```
+
+El scraper es idempotente: retoma donde se quedó, no duplica productos ni imágenes.
+
+### 3. Exportar datos
+
+```bash
+# A CSV para Excel
+python importadores/exportar_csv.py --proveedor mi_proveedor
+```
 
 ## Reglas importantes
 
 - **NO duplicar productos**: El scraper usa SKU como identificador único. Si un SKU ya existe, actualiza en vez de insertar.
 - **NO descargar imágenes duplicadas**: Verifica si el archivo local ya existe antes de descargar.
-- **Respetar rate limits**: 0.3s entre requests. No aumentar.
-- **No modificar config.json**: Los datos del proveedor ya están configurados.
+- **Respetar rate limits**: Configurar `rate_limit_segundos` en config.json. No abusar.
 - **No borrar catalogo.db**: El progreso acumulado es valioso.
 
 ## Estructura del proyecto
@@ -50,12 +56,11 @@ catalogo-ferreteria/
 │   ├── requirements.txt        # requests, beautifulsoup4, lxml
 │   └── config_example.json     # Template para nuevos proveedores
 ├── proveedores/
-│   └── barbosa/
-│       ├── config.json         # Config de Barbosa (6 sitemaps)
-│       ├── catalogo.db         # SQLite con ~904 productos
-│       └── images/             # ~934 imágenes descargadas
+│   └── mi_proveedor/
+│       ├── config.json         # Configuración del proveedor
+│       ├── catalogo.db         # SQLite con productos
+│       └── images/             # Imágenes descargadas
 ├── importadores/
-│   ├── ferrepunto.js           # Importador para FerrePunto POS
 │   └── exportar_csv.py         # Exportador CSV
 └── README.md
 ```
@@ -67,15 +72,8 @@ catalogo-ferreteria/
 - `producto_meta`: id, producto_id, clave, valor
 - `imagenes`: id, producto_id, url_original, local_path, es_principal
 
-## Errores conocidos y soluciones
+## Errores conocidos
 
 - **Foreign key constraint failed**: Si ocurre, el scraper lo ignora y continúa.
 - **Timeout en imágenes**: Se reintentan automáticamente, las que fallan se saltan.
 - **Productos con precio $0.00**: Es normal, los precios del sitio se cargan por JavaScript.
-
-## Futuros proveedores
-
-Para agregar un nuevo proveedor:
-1. Crear `proveedores/nuevo_proveedor/config.json` basado en `scraper/config_example.json`
-2. Ejecutar `python scraper/scraper.py --proveedor nuevo_proveedor`
-3. El scraper crea la DB y descarga todo automáticamente

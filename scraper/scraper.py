@@ -8,9 +8,9 @@ proveedores/{nombre}/config.json y genera:
   - proveedores/{nombre}/images/ (imágenes descargadas)
 
 Uso:
-  python scraper.py --proveedor barbosa
-  python scraper.py --proveedor barbosa --piloto
-  python scraper.py --proveedor barbosa --solo-imagenes
+  python scraper.py --proveedor mi_proveedor
+  python scraper.py --proveedor mi_proveedor --piloto
+  python scraper.py --proveedor mi_proveedor --solo-imagenes
 """
 
 import argparse

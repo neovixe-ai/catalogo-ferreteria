@@ -5,8 +5,8 @@ Exportador de Catálogo → CSV
 Exporta el catalogo.db a archivos CSV para Excel/Google Sheets.
 
 Uso:
-  python exportar_csv.py --proveedor barbosa
-  python exportar_csv.py --proveedor barbosa --output mi_catalogo.csv
+  python exportar_csv.py --proveedor mi_proveedor
+  python exportar_csv.py --proveedor mi_proveedor --output mi_catalogo.csv
 """
 
 import argparse
