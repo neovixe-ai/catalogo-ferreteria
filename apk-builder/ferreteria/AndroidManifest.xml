@@ -3,6 +3,7 @@
     package="com.ferreteria.pedido">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34" />
 
     <application
         android:allowBackup="true"

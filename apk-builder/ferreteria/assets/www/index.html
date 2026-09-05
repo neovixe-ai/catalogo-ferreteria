@@ -583,15 +583,33 @@ function init() {
   loadProducts(function(saved) {
     if (saved && saved.length > 0) {
       DATA = saved;
+      loadOrders(function(savedOrders) {
+        orders = savedOrders;
+        updateCatalogInfo();
+        renderOrders();
+      });
     } else {
-      DATA = loadEmbeddedData();
-      saveProducts(DATA, function() {});
+      fetch('data/productos.json')
+        .then(function(r) { return r.json(); })
+        .then(function(json) {
+          DATA = json;
+          saveProducts(DATA, function() {});
+          loadOrders(function(savedOrders) {
+            orders = savedOrders;
+            updateCatalogInfo();
+            renderOrders();
+          });
+        })
+        .catch(function() {
+          DATA = loadEmbeddedData();
+          saveProducts(DATA, function() {});
+          loadOrders(function(savedOrders) {
+            orders = savedOrders;
+            updateCatalogInfo();
+            renderOrders();
+          });
+        });
     }
-    loadOrders(function(savedOrders) {
-      orders = savedOrders;
-      updateCatalogInfo();
-      renderOrders();
-    });
   });
 }
 
