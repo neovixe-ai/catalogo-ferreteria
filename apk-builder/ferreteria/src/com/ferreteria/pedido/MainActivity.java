@@ -21,6 +21,8 @@ public class MainActivity extends Activity {
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
         settings.setAllowFileAccess(true);
+        settings.setAllowFileAccessFromFileURLs(true);
+        settings.setAllowUniversalAccessFromFileURLs(true);
         settings.setMediaPlaybackRequiresUserGesture(false);
 
         webView.setWebViewClient(new WebViewClient());
@@ -50,9 +52,6 @@ public class MainActivity extends Activity {
                 try {
                     InputStream in = getAssets().open(srcPath);
                     File outFile = new File(dstPath);
-                    if (outFile.exists()) {
-                        continue;
-                    }
                     OutputStream out = new FileOutputStream(outFile);
                     byte[] buffer = new byte[4096];
                     int read;
