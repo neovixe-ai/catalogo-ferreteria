@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="manifest" href="/manifest.json">
+    <title>Pedido</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f6fa;
+            color: #2c3e50;
+            -webkit-tap-highlight-color: transparent;
+            padding-bottom: 80px;
+        }
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 12px 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .header h1 { font-size: 18px; font-weight: 600; }
+        .header .subtitle { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+        .screen { display: none; padding: 12px; }
+        .screen.active { display: block; }
+
+        /* Proveedor cards */
+        .proveedor-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            cursor: pointer;
+            transition: transform 0.15s;
+        }
+        .proveedor-card:active { transform: scale(0.98); }
+        .proveedor-card h3 { font-size: 16px; margin-bottom: 4px; }
+        .proveedor-card .meta { font-size: 12px; color: #7f8c8d; }
+
+        /* Search */
+        .search-bar {
+            position: sticky;
+            top: 52px;
+            z-index: 90;
+            padding: 8px 0;
+            background: #f5f6fa;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: white;
+        }
+        .search-bar input:focus { border-color: #3498db; }
+
+        /* Producto list */
+        .producto-item {
+            background: white;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .producto-img {
+            width: 56px;
+            height: 56px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #ecf0f1;
+            flex-shrink: 0;
+        }
+        .producto-img.placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #bdc3c7;
+        }
+        .producto-info { flex: 1; min-width: 0; }
+        .producto-sku { font-size: 11px; color: #7f8c8d; font-weight: 600; }
+        .producto-nombre { font-size: 13px; font-weight: 500; line-height: 1.3; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+        .producto-precio { font-size: 14px; color: #27ae60; font-weight: 700; margin-top: 2px; }
+        .producto-acciones { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+        .btn-cant {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-menos { background: #fee; color: #e74c3c; }
+        .btn-mas { background: #e8f8f5; color: #27ae60; }
+        .cant-display { font-size: 16px; font-weight: 700; min-width: 24px; text-align: center; }
+
+        /* Pedido floating bar */
+        .pedido-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #2c3e50;
+            color: white;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        .pedido-bar .info { font-size: 13px; }
+        .pedido-bar .total { font-size: 18px; font-weight: 700; }
+        .btn-generar {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .btn-generar:disabled { background: #7f8c8d; }
+        .pedido-bar.hidden { display: none; }
+
+        /* Pedido view */
+        .pedido-item {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .pedido-item-info { flex: 1; }
+        .pedido-item-sku { font-size: 11px; color: #7f8c8d; }
+        .pedido-item-nombre { font-size: 14px; font-weight: 500; }
+        .pedido-item-precio { font-size: 13px; color: #27ae60; }
+        .pedido-item-cant { text-align: right; }
+        .pedido-item-cant input {
+            width: 50px;
+            padding: 4px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .btn-remove {
+            background: #fee;
+            color: #e74c3c;
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 8px;
+        }
+
+        /* Form */
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+        }
+        .form-group input:focus, .form-group textarea:focus { border-color: #3498db; }
+        .form-group textarea { resize: vertical; min-height: 60px; }
+
+        .btn-back {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px 8px;
+            margin-right: 8px;
+        }
+        .header-row { display: flex; align-items: center; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #95a5a6;
+        }
+        .empty-state .icon { font-size: 48px; margin-bottom: 12px; }
+
+        .total-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            text-align: right;
+        }
+        .total-section .label { font-size: 14px; color: #7f8c8d; }
+        .total-section .amount { font-size: 24px; font-weight: 700; color: #27ae60; }
+
+        .btn-pdf {
+            width: 100%;
+            padding: 14px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 12px;
+        }
+        .btn-pdf:active { opacity: 0.9; }
+
+        .loading { text-align: center; padding: 40px; color: #95a5a6; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-row">
+            <button class="btn-back" id="btnBack" style="display:none" onclick="goBack()">&#8249;</button>
+            <div>
+                <h1 id="headerTitle">Mis Pedidos</h1>
+                <div class="subtitle" id="headerSubtitle"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Screen: Proveedores -->
+    <div class="screen active" id="screenProveedores">
+        <div id="proveedoresList" class="loading">Cargando...</div>
+    </div>
+
+    <!-- Screen: Productos -->
+    <div class="screen" id="screenProductos">
+        <div class="search-bar">
+            <input type="search" id="searchInput" placeholder="Buscar SKU o producto..." oninput="buscarProductos()">
+        </div>
+        <div id="productosList"></div>
+        <div id="loadMore" style="text-align:center;padding:12px">
+            <button onclick="cargarMas()" style="padding:8px 20px;border:1px solid #ddd;border-radius:8px;background:white;cursor:pointer">Cargar más</button>
+        </div>
+    </div>
+
+    <!-- Screen: Mi Pedido -->
+    <div class="screen" id="screenPedido">
+        <div id="pedidoItems"></div>
+        <div class="total-section">
+            <div class="label">Total estimado</div>
+            <div class="amount" id="pedidoTotal">0.00</div>
+        </div>
+        <div class="form-group" style="margin-top:16px">
+            <label>Nombre del cliente</label>
+            <input type="text" id="clienteNombre" placeholder="Tu nombre">
+        </div>
+        <div class="form-group">
+            <label>Notas</label>
+            <textarea id="pedidoNotas" placeholder="Instrucciones especiales..."></textarea>
+        </div>
+        <button class="btn-pdf" onclick="generarPDF()">Descargar PDF del pedido</button>
+    </div>
+
+    <!-- Pedido bar -->
+    <div class="pedido-bar hidden" id="pedidoBar" onclick="verPedido()">
+        <div>
+            <div class="info"><span id="pedidoCount">0</span> productos</div>
+            <div class="total">Bs. <span id="pedidoTotalBar">0.00</span></div>
+        </div>
+        <div style="font-size:13px">Ver pedido &#8250;</div>
+    </div>
+
+    <script>
+    let state = {
+        proveedor: null,
+        productos: [],
+        pedido: {},
+        page: 1,
+        total: 0,
+        searchTimeout: null
+    };
+
+    async function api(url) {
+        const r = await fetch(url);
+        return r.json();
+    }
+
+    function formatPrecio(txt) {
+        if (!txt) return null;
+        let n = parseFloat(txt.replace(",", "."));
+        return isNaN(n) ? null : n;
+    }
+
+    // Proveedores
+    async function loadProveedores() {
+        const data = await api("/api/proveedores");
+        const el = document.getElementById("proveedoresList");
+        if (data.length === 0) {
+            el.innerHTML = '<div class="empty-state"><div class="icon">&#128230;</div><p>No hay proveedores</p></div>';
+            return;
+        }
+        el.innerHTML = data.map(p => `
+            <div class="proveedor-card" onclick="seleccionarProveedor('${p.slug}')">
+                <h3>${p.nombre}</h3>
+                <div class="meta">${p.total_productos} productos &middot; Catalogo: ${p.ultimo_catalogo || 'N/A'}</div>
+            </div>
+        `).join("");
+    }
+
+    function seleccionarProveedor(slug) {
+        state.proveedor = slug;
+        state.productos = [];
+        state.page = 1;
+        document.getElementById("headerTitle").textContent = slug.replace(/_/g, " ").toUpperCase();
+        document.getElementById("headerSubtitle").textContent = "Productos disponibles";
+        showScreen("screenProductos");
+        document.getElementById("btnBack").style.display = "inline";
+        document.getElementById("searchInput").value = "";
+        cargarProductos();
+    }
+
+    // Productos
+    async function cargarProductos(append = false) {
+        const q = document.getElementById("searchInput").value;
+        const data = await api(`/api/productos/${state.proveedor}?q=${encodeURIComponent(q)}&page=${state.page}&per_page=50`);
+        if (append) {
+            state.productos = state.productos.concat(data.productos);
+        } else {
+            state.productos = data.productos;
+        }
+        state.total = data.total;
+        renderProductos();
+    }
+
+    function renderProductos() {
+        const el = document.getElementById("productosList");
+        if (state.productos.length === 0) {
+            el.innerHTML = '<div class="empty-state"><div class="icon">&#128270;</div><p>No se encontraron productos</p></div>';
+            return;
+        }
+        el.innerHTML = state.productos.map(p => {
+            const cant = state.pedido[p.sku] || 0;
+            const precio = formatPrecio(p.precio_texto);
+            const img = p.imagen_url
+                ? `<img class="producto-img" src="${p.imagen_url}" alt="${p.sku}" onerror="this.outerHTML='<div class=\\'producto-img placeholder\\'>&#128230;</div>'">`
+                : `<div class="producto-img placeholder">&#128230;</div>`;
+            return `
+            <div class="producto-item">
+                ${img}
+                <div class="producto-info">
+                    <div class="producto-sku">${p.sku}</div>
+                    <div class="producto-nombre">${p.nombre}</div>
+                    ${precio !== null ? `<div class="producto-precio">Bs. ${precio.toFixed(2)}</div>` : ''}
+                </div>
+                <div class="producto-acciones">
+                    ${cant > 0 ? `<button class="btn-cant btn-menos" onclick="event.stopPropagation();changeCant('${p.sku}',-1)">-</button>` : ''}
+                    ${cant > 0 ? `<span class="cant-display">${cant}</span>` : ''}
+                    <button class="btn-cant btn-mas" onclick="event.stopPropagation();changeCant('${p.sku}',1)">+</button>
+                </div>
+            </div>`;
+        }).join("");
+        document.getElementById("loadMore").style.display = state.productos.length < state.total ? "block" : "none";
+    }
+
+    function cargarMas() {
+        state.page++;
+        cargarProductos(true);
+    }
+
+    function buscarProductos() {
+        clearTimeout(state.searchTimeout);
+        state.searchTimeout = setTimeout(() => {
+            state.page = 1;
+            cargarProductos();
+        }, 300);
+    }
+
+    function changeCant(sku, delta) {
+        let cant = (state.pedido[sku] || 0) + delta;
+        if (cant <= 0) delete state.pedido[sku];
+        else state.pedido[sku] = cant;
+        renderProductos();
+        updatePedidoBar();
+    }
+
+    // Pedido
+    function updatePedidoBar() {
+        const count = Object.keys(state.pedido).length;
+        const bar = document.getElementById("pedidoBar");
+        if (count === 0) {
+            bar.classList.add("hidden");
+            return;
+        }
+        bar.classList.remove("hidden");
+        document.getElementById("pedidoCount").textContent = count;
+        let total = 0;
+        for (const [sku, cant] of Object.entries(state.pedido)) {
+            const prod = state.productos.find(p => p.sku === sku);
+            if (prod) {
+                const precio = formatPrecio(prod.precio_texto);
+                if (precio) total += precio * cant;
+            }
+        }
+        document.getElementById("pedidoTotalBar").textContent = total.toFixed(2);
+    }
+
+    function verPedido() {
+        document.getElementById("headerTitle").textContent = "Mi Pedido";
+        document.getElementById("headerSubtitle").textContent = `${Object.keys(state.pedido).length} productos`;
+        showScreen("screenPedido");
+        renderPedido();
+    }
+
+    function renderPedido() {
+        const el = document.getElementById("pedidoItems");
+        let total = 0;
+        const items = Object.entries(state.pedido).map(([sku, cant]) => {
+            const prod = state.productos.find(p => p.sku === sku);
+            const nombre = prod ? prod.nombre : sku;
+            const precio = prod ? formatPrecio(prod.precio_texto) : null;
+            const subtotal = precio ? precio * cant : 0;
+            total += subtotal;
+            return `
+            <div class="pedido-item">
+                <div class="pedido-item-info">
+                    <div class="pedido-item-sku">${sku}</div>
+                    <div class="pedido-item-nombre">${nombre}</div>
+                    <div class="pedido-item-precio">${precio ? 'Bs. ' + precio.toFixed(2) : '-'}</div>
+                </div>
+                <div class="pedido-item-cant">
+                    <input type="number" value="${cant}" min="1" onchange="updateCant('${sku}', this.value)">
+                </div>
+                <button class="btn-remove" onclick="removeItem('${sku}')">&times;</button>
+            </div>`;
+        });
+        el.innerHTML = items.length ? items.join("") : '<div class="empty-state"><div class="icon">&#128722;</div><p>Pedido vacio</p></div>';
+        document.getElementById("pedidoTotal").textContent = total.toFixed(2);
+    }
+
+    function updateCant(sku, val) {
+        let cant = parseInt(val);
+        if (isNaN(cant) || cant <= 0) delete state.pedido[sku];
+        else state.pedido[sku] = cant;
+        renderPedido();
+        updatePedidoBar();
+    }
+
+    function removeItem(sku) {
+        delete state.pedido[sku];
+        renderPedido();
+        updatePedidoBar();
+    }
+
+    async function generarPDF() {
+        const items = Object.entries(state.pedido).map(([sku, cantidad]) => ({ sku, cantidad }));
+        if (items.length === 0) return alert("Pedido vacio");
+
+        const data = {
+            proveedor: state.proveedor,
+            items: items,
+            cliente: document.getElementById("clienteNombre").value,
+            notas: document.getElementById("pedidoNotas").value
+        };
+
+        const r = await fetch("/api/pedido/pdf", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data)
+        });
+
+        if (!r.ok) return alert("Error al generar PDF");
+
+        const blob = await r.blob();
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `pedido_${state.proveedor}_${new Date().toISOString().slice(0,10)}.pdf`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function showScreen(id) {
+        document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+    }
+
+    function goBack() {
+        if (document.getElementById("screenPedido").classList.contains("active")) {
+            seleccionarProveedor(state.proveedor);
+        } else {
+            state.proveedor = null;
+            document.getElementById("headerTitle").textContent = "Mis Pedidos";
+            document.getElementById("headerSubtitle").textContent = "";
+            document.getElementById("btnBack").style.display = "none";
+            document.getElementById("pedidoBar").classList.add("hidden");
+            showScreen("screenProveedores");
+            loadProveedores();
+        }
+    }
+
+    // Init
+    loadProveedores();
+    </script>
+</body>
+</html>
