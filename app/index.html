@@ -13,6 +13,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .hdr{background:#2c3e50;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .hdr h1{font-size:17px;font-weight:600;flex:1}
 .btn-b{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;padding:2px 6px;display:none}
+.btn-i{background:none;border:none;color:#fff;font-size:18px;cursor:pointer;padding:4px 8px}
 .scr{display:none;padding:12px}.scr.on{display:block}
 .srch{position:sticky;top:50px;z-index:90;padding:8px 0;background:#f5f6fa}
 .srch input{width:100%;padding:11px 14px;border:2px solid #e0e0e0;border-radius:10px;font-size:15px;outline:none;background:#fff}
@@ -50,17 +51,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
 .fg textarea{resize:vertical;min-height:50px}
 .btn-pdf{width:100%;padding:14px;background:#e74c3c;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:12px}
 .btn-pdf:active{opacity:.9}
+.btn-upd{width:100%;padding:14px;background:#3498db;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;margin-top:12px}
+.btn-upd:active{opacity:.9}
+.btn-sel{display:block;width:100%;padding:16px;background:#fff;border:2px dashed #3498db;border-radius:12px;font-size:15px;color:#3498db;cursor:pointer;text-align:center;margin-top:12px}
+.btn-sel:active{background:#ebf5fb}
 .empty{text-align:center;padding:40px 20px;color:#95a5a6}.empty .ic{font-size:44px;margin-bottom:10px}
 .lds{text-align:center;padding:30px;color:#95a5a6}
+.info-bar{background:#ebf5fb;border-radius:8px;padding:8px 12px;font-size:12px;color:#2980b9;margin-bottom:10px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#27ae60;color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;z-index:200;display:none;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 </style>
 </head>
 <body>
 <div class="hdr">
  <button class="btn-b" id="bb" onclick="goBack()">&#8249;</button>
  <h1 id="ht">Mis Pedidos</h1>
+ <button class="btn-i" id="bi" onclick="showUpdate()" style="display:none" title="Actualizar">&#8635;</button>
 </div>
 
-<div class="scr on" id="s1"><div id="pls" class="lds">Cargando...</div></div>
+<div class="scr on" id="s1">
+ <div id="pls" class="lds">Cargando...</div>
+</div>
 <div class="scr" id="s2">
  <div class="srch"><input type="search" id="si" placeholder="Buscar SKU o producto..." oninput="buscar()"></div>
  <div id="plp"></div>
@@ -72,28 +82,157 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
  <div class="fg"><label>Notas</label><textarea id="pno" placeholder="Instrucciones..."></textarea></div>
  <button class="btn-pdf" onclick="genPDF()">Descargar PDF</button>
 </div>
+<div class="scr" id="s4">
+ <div style="text-align:center;padding:20px">
+  <div style="font-size:48px;margin-bottom:12px">&#128260;</div>
+  <h2>Actualizar catalogo</h2>
+  <p style="color:#7f8c8d;margin:8px 0;font-size:14px">Selecciona el archivo <b>productos.json</b> nuevo</p>
+  <div id="updInfo" class="info-bar" style="display:none"></div>
+  <input type="file" id="fileIn" accept=".json" style="display:none" onchange="handleFile(this)">
+  <label for="fileIn" class="btn-sel">Seleccionar archivo JSON</label>
+  <button class="btn-upd" onclick="show('s1');document.getElementById('bb').style.display='none';document.getElementById('bi').style.display='none'" style="margin-top:12px;background:#95a5a6">Volver</button>
+ </div>
+</div>
 
 <div class="bar hid" id="pbr" onclick="verPedido()">
  <div><div class="r"><span id="pcn">0</span> productos</div><div class="t">Bs. <span id="ptb">0.00</span></div></div>
  <div style="font-size:13px">Ver pedido &#8250;</div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
 var DATA=[];
-var S={prov:null,prods:[],pedido:{},page:0,search:null,tot:0};
+var S={prov:null,prods:[],pedido:{},page:0};
+
+// IndexedDB
+var DB_NAME='PedidoDB';
+var DB_STORE='data';
+
+function openDB(cb){
+ var req=indexedDB.open(DB_NAME,1);
+ req.onupgradeneeded=function(e){
+  var db=e.target.result;
+  if(!db.objectStoreNames.contains(DB_STORE))db.createObjectStore(DB_STORE);
+ };
+ req.onsuccess=function(e){cb(e.target.result);};
+ req.onerror=function(){cb(null);};
+}
+
+function saveData(data,cb){
+ openDB(function(db){
+  if(!db){cb(false);return;}
+  var tx=db.transaction(DB_STORE,'readwrite');
+  tx.objectStore(DB_STORE).put(data,'productos');
+  tx.oncomplete=function(){cb(true);};
+  tx.onerror=function(){cb(false);};
+ });
+}
+
+function loadData(cb){
+ openDB(function(db){
+  if(!db){cb(null);return;}
+  var tx=db.transaction(DB_STORE,'readonly');
+  var req=tx.objectStore(DB_STORE).get('productos');
+  req.onsuccess=function(){cb(req.result||null);};
+  req.onerror=function(){cb(null);};
+ });
+}
+
+function getFechaActualizacion(){
+ return localStorage.getItem('fechaActualizacion')||null;
+}
+
+function setFechaActualizacion(){
+ var now=new Date();
+ var s=now.toLocaleDateString('es-VE')+' '+now.toLocaleTimeString('es-VE',{hour:'2-digit',minute:'2-digit'});
+ localStorage.setItem('fechaActualizacion',s);
+ return s;
+}
+
+function showToast(msg){
+ var t=document.getElementById('toast');
+ t.textContent=msg;
+ t.style.display='block';
+ setTimeout(function(){t.style.display='none';},3000);
+}
+
+function handleFile(input){
+ var file=input.files[0];
+ if(!file)return;
+ var reader=new FileReader();
+ reader.onload=function(e){
+  try{
+   var data=JSON.parse(e.target.result);
+   if(!Array.isArray(data)||!data.length){
+    alert('Archivo no valido. Debe ser un JSON con productos.');
+    return;
+   }
+   if(!data[0].sku||!data[0].nombre){
+    alert('Archivo no tiene formato de productos.');
+    return;
+   }
+   saveData(data,function(ok){
+    if(ok){
+     var f=setFechaActualizacion();
+     document.getElementById('updInfo').style.display='block';
+     document.getElementById('updInfo').textContent='Actualizado: '+f+' ('+data.length+' productos)';
+     DATA=data;
+     showToast('Catalogo actualizado: '+data.length+' productos');
+     setTimeout(function(){
+      show('s1');
+      renderProveedores();
+     },1500);
+    }else{
+     alert('Error al guardar.');
+    }
+   });
+  }catch(ex){
+   alert('Archivo JSON invalido.');
+  }
+ };
+ reader.readAsText(file);
+}
 
 function init(){
  document.getElementById('pls').innerHTML='<div class="ic">&#128230;</div><p>Cargando productos...</p>';
- fetch('data/productos.json').then(function(r){return r.json()}).then(function(d){
-  DATA=d;
-  renderProveedores();
- }).catch(function(){
-  document.getElementById('pls').innerHTML='<div class="ic">&#9888;</div><p>Error al cargar datos</p>';
+ loadData(function(saved){
+  if(saved&&saved.length){
+   DATA=saved;
+   renderProveedores();
+  }else{
+   fetch('data/productos.json').then(function(r){return r.json()}).then(function(d){
+    DATA=d;
+    saveData(d,function(){});
+    setFechaActualizacion();
+    renderProveedores();
+   }).catch(function(){
+    document.getElementById('pls').innerHTML='<div class="ic">&#9888;</div><p>Error al cargar datos</p>';
+   });
+  }
  });
 }
 
 function renderProveedores(){
- document.getElementById('pls').innerHTML='<div class="pc" onclick="selProv()"><h3>LC 2050</h3><div class="m">'+DATA.length+' productos</div></div>';
+ var fecha=getFechaActualizacion();
+ var html='<div class="pc" onclick="selProv()"><h3>LC 2050</h3><div class="m">'+DATA.length+' productos</div>';
+ if(fecha)html+='<div class="m">Actualizado: '+fecha+'</div>';
+ html+='</div>';
+ html+='<button class="btn-upd" onclick="showUpdate()">Actualizar catalogo</button>';
+ document.getElementById('pls').innerHTML=html;
+ document.getElementById('bi').style.display='inline';
+}
+
+function showUpdate(){
+ document.getElementById('ht').textContent='Actualizar';
+ show('s4');
+ document.getElementById('fileIn').value='';
+ document.getElementById('updInfo').style.display='none';
+ var fecha=getFechaActualizacion();
+ if(fecha){
+  document.getElementById('updInfo').style.display='block';
+  document.getElementById('updInfo').textContent='Ultima actualizacion: '+fecha;
+ }
 }
 
 function selProv(){
@@ -263,12 +402,16 @@ function goBack(){
  if(document.getElementById('s3').classList.contains('on')){
   document.getElementById('ht').textContent='LC 2050';
   show('s2');
+ }else if(document.getElementById('s4').classList.contains('on')){
+  renderProveedores();
+  document.getElementById('ht').textContent='Mis Pedidos';
  }else{
   S.prov=null;
   document.getElementById('ht').textContent='Mis Pedidos';
   document.getElementById('bb').style.display='none';
   document.getElementById('pbr').classList.add('hid');
   show('s1');
+  renderProveedores();
  }
 }
 
