@@ -265,6 +265,8 @@ body {
 .btn-pdf { background: var(--danger); color: #fff; }
 .btn-settings { background: var(--info); color: #fff; }
 .btn-secondary { background: #95a5a6; color: #fff; }
+.btn-info { background: var(--info); color: #fff; }
+.btn-provider { background: #8e44ad; color: #fff; }
 .empty-state {
   text-align: center;
   padding: 40px 20px;
@@ -388,6 +390,18 @@ body {
 .orders-list h3 { font-size: 15px; margin-bottom: 4px; }
 .orders-list .meta { font-size: 12px; color: var(--text-light); }
 .orders-list .total { font-size: 14px; color: var(--success); font-weight: 600; margin-top: 4px; }
+.order-actions { display: flex; gap: 8px; margin-top: 10px; }
+.btn-mini {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn-view { background: var(--info); color: #fff; }
+.btn-edit { background: #95a5a6; color: #fff; }
 .settings-card {
   background: var(--card);
   border-radius: 12px;
@@ -459,8 +473,11 @@ body {
     <textarea id="orderNotes" placeholder="Instrucciones especiales..."></textarea>
   </div>
   <div id="discontinuedWarning"></div>
+  <button class="btn-full btn-settings" onclick="saveOrder()">Guardar pedido</button>
+  <button class="btn-full btn-info" onclick="continueShopping()">Seguir agregando</button>
   <button class="btn-full btn-whatsapp" onclick="sendWhatsApp()">Enviar por WhatsApp</button>
   <button class="btn-full btn-pdf" onclick="downloadPDF()">Descargar PDF</button>
+  <button class="btn-full btn-provider" onclick="downloadProviderPDF()">PDF para proveedor</button>
 </div>
 
 <div class="screen" id="screenSettings">
@@ -506,6 +523,7 @@ var searchQuery = '';
 var displayCount = 50;
 var isLoading = false;
 var downloadModalOpen = false;
+var orderSource = 'list';
 
 var DB_NAME = 'PedidoDB';
 var DB_VERSION = 2;
@@ -681,7 +699,11 @@ function renderOrders() {
       '<div class="meta">' + date + ' - ' + itemCount + ' productos</div>' +
       '<div class="total">' + formatPrice(total) + '</div>' +
       '<button class="remove" onclick="event.stopPropagation();deleteOrder(' + idx + ')" style="position:absolute;top:10px;right:10px;background:#fee;color:#e74c3c;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer">&times;</button>' +
-      '</div>';
+      '<div class="order-actions">' +
+        '<button class="btn-mini btn-view" onclick="event.stopPropagation();openOrder(' + idx + ')">Visualizar</button>' +
+        '<button class="btn-mini btn-edit" onclick="event.stopPropagation();editOrder(' + idx + ')">Editar</button>' +
+      '</div>' +
+    '</div>';
   }).join('');
 }
 
@@ -711,6 +733,7 @@ function newOrder() {
 function openOrder(idx) {
   currentOrder = orders[idx];
   cart = Object.assign({}, currentOrder.items);
+  orderSource = 'list';
   showScreen('screenOrder');
   document.getElementById('headerTitle').textContent = 'Pedido ' + (idx + 1);
   document.getElementById('btnBack').style.display = 'inline';
@@ -718,6 +741,21 @@ function openOrder(idx) {
   document.getElementById('clientName').value = currentOrder.clientName || '';
   document.getElementById('orderNotes').value = currentOrder.notes || '';
   renderOrderItems();
+}
+
+function editOrder(idx) {
+  currentOrder = orders[idx];
+  cart = Object.assign({}, currentOrder.items);
+  orderSource = 'catalog';
+  document.getElementById('discountPct').value = currentOrder.discountPct || 0;
+  document.getElementById('clientName').value = currentOrder.clientName || '';
+  document.getElementById('orderNotes').value = currentOrder.notes || '';
+  showScreen('screenCatalog');
+  document.getElementById('headerTitle').textContent = 'LC 2050';
+  document.getElementById('btnBack').style.display = 'inline';
+  renderProducts();
+  setupInfiniteScroll();
+  updateBottomBar();
 }
 
 function deleteOrder(idx) {
@@ -738,11 +776,19 @@ function goBack() {
   var current = document.querySelector('.screen.active');
   if (current.id === 'screenOrder') {
     saveCurrentOrder();
-    showScreen('screenOrders');
-    document.getElementById('headerTitle').textContent = 'Mis Pedidos';
-    document.getElementById('btnBack').style.display = 'none';
-    document.getElementById('bottomBar').classList.add('hidden');
-    renderOrders();
+    if (orderSource === 'catalog') {
+      showScreen('screenCatalog');
+      document.getElementById('headerTitle').textContent = 'LC 2050';
+      document.getElementById('btnBack').style.display = 'inline';
+      renderProducts();
+      setupInfiniteScroll();
+    } else {
+      showScreen('screenOrders');
+      document.getElementById('headerTitle').textContent = 'Mis Pedidos';
+      document.getElementById('btnBack').style.display = 'none';
+      document.getElementById('bottomBar').classList.add('hidden');
+      renderOrders();
+    }
   } else if (current.id === 'screenCatalog') {
     showScreen('screenOrders');
     document.getElementById('headerTitle').textContent = 'Mis Pedidos';
@@ -906,12 +952,29 @@ function viewOrder() {
   if (!currentOrder) {
     currentOrder = { id: Date.now(), items: {}, date: new Date().toISOString(), notes: '', discountPct: 0, clientName: '' };
   }
+  orderSource = 'catalog';
   currentOrder.items = Object.assign({}, cart);
   showScreen('screenOrder');
   document.getElementById('headerTitle').textContent = 'Mi Pedido';
   document.getElementById('btnBack').style.display = 'inline';
   document.getElementById('discountPct').value = currentOrder.discountPct || 0;
   renderOrderItems();
+}
+
+function saveOrder() {
+  saveCurrentOrder();
+  showToast('Pedido guardado');
+}
+
+function continueShopping() {
+  saveCurrentOrder();
+  cart = Object.assign({}, currentOrder.items);
+  orderSource = 'catalog';
+  showScreen('screenCatalog');
+  document.getElementById('headerTitle').textContent = 'LC 2050';
+  document.getElementById('btnBack').style.display = 'inline';
+  renderProducts();
+  setupInfiniteScroll();
 }
 
 function renderOrderItems() {
@@ -1123,9 +1186,57 @@ function downloadPDF() {
     (notes ? '<div class="info" style="margin-top:10px"><b>Notas:</b> ' + notes + '</div>' : '') +
     '</body></html>';
 
+  saveDownloadedFile(html, 'pedido_');
+}
+
+function downloadProviderPDF() {
+  saveCurrentOrder();
+
+  var items = currentOrder.items;
+  var validItems = [];
+  for (var sku in items) {
+    var product = DATA.find(function(p) { return p.sku === sku; });
+    if (product && parsePrice(product.precio_texto)) {
+      validItems.push({ sku: sku, name: product.nombre, qty: items[sku] });
+    }
+  }
+
+  if (validItems.length === 0) {
+    alert('No hay productos validos para generar PDF');
+    return;
+  }
+
+  var clientName = document.getElementById('clientName').value || '';
+  var notes = document.getElementById('orderNotes').value || '';
+
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Pedido Proveedor</title>' +
+    '<style>body{font-family:Arial,sans-serif;padding:20px;font-size:12px}' +
+    'h1{font-size:18px;margin-bottom:5px}table{width:100%;border-collapse:collapse;margin-top:10px}' +
+    'col.cant{width:12%}col.cod{width:20%}col.desc{width:68%}' +
+    'th,td{border:1px solid #ddd;padding:6px;text-align:center}' +
+    'th{background:#2c3e50;color:#fff}.info{margin-bottom:10px;color:#555}' +
+    '.nota{margin-top:10px}</style></head><body>' +
+    '<h1>Pedido - LC 2050</h1>' +
+    '<div class="info">Fecha: ' + new Date().toLocaleDateString('es-VE') + '</div>' +
+    (clientName ? '<div class="info">Cliente: ' + clientName + '</div>' : '') +
+    '<table><colgroup><col class="cant"><col class="cod"><col class="desc"></colgroup>' +
+    '<thead><tr><th>Cantidad</th><th>Codigo</th><th>Descripcion</th></tr></thead><tbody>';
+
+  validItems.forEach(function(item) {
+    html += '<tr><td>' + item.qty + '</td><td>' + item.sku + '</td><td>' + item.name + '</td></tr>';
+  });
+
+  html += '</tbody></table>' +
+    (notes ? '<div class="nota info"><b>Notas:</b> ' + notes + '</div>' : '') +
+    '</body></html>';
+
+  saveDownloadedFile(html, 'pedido_proveedor_');
+}
+
+function saveDownloadedFile(html, prefix) {
   var now = new Date();
   var pad = function(n) { return (n < 10 ? '0' : '') + n; };
-  var fileName = 'pedido_' + now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + '_' + pad(now.getHours()) + pad(now.getMinutes()) + '.html';
+  var fileName = prefix + now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + '_' + pad(now.getHours()) + pad(now.getMinutes()) + '.html';
 
   if (window.Android && window.Android.downloadPedido) {
     var result = window.Android.downloadPedido(fileName, html);
@@ -1135,8 +1246,9 @@ function downloadPDF() {
         '<div class="modal-download">' +
         '<div class="icon">&#9989;</div>' +
         '<h2>Descarga exitosa</h2>' +
-        '<p>Tu pedido se guardo como archivo HTML.</p>' +
+        '<p>Tu archivo se guardo como HTML.</p>' +
         '<div class="path">' + (parts[1] || fileName) + '</div>' +
+        (parts[2] ? '<button class="btn-full btn-info" onclick="openDownloadedFile(\'' + parts[2] + '\')" style="margin-top:6px">Abrir archivo</button>' : '') +
         '<div class="note"><b>Como convertirlo a PDF:</b><br>' +
         'Abre el archivo con Google Drive o el navegador y elige <b>&quot;Imprimir&quot; &rarr; &quot;Guardar como PDF&quot;</b>, o usa una app convertidora de HTML a PDF.</div>' +
         '<button class="btn-full btn-secondary" onclick="closeDownloadModal()" style="margin-top:6px">Entendido</button>' +
@@ -1164,6 +1276,15 @@ function downloadPDF() {
   URL.revokeObjectURL(url);
 
   showToast('Archivo descargado');
+}
+
+function openDownloadedFile(uri) {
+  if (window.Android && window.Android.openFile) {
+    var res = window.Android.openFile(uri);
+    if (res && res.indexOf('ERR') === 0) {
+      showToast(res.split('|')[1] || 'No se pudo abrir el archivo');
+    }
+  }
 }
 
 function showSettings() {

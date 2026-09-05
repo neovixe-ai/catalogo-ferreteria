@@ -3,6 +3,7 @@ package com.ferreteria.pedido;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -15,7 +16,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
-import android.content.Intent;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 
@@ -91,7 +91,7 @@ public class MainActivity extends Activity {
             values.clear();
             values.put(MediaStore.Downloads.IS_PENDING, 0);
             getContentResolver().update(uri, values, null, null);
-            return "OK|Descargas/" + fileName;
+            return "OK|Descargas/" + fileName + "|" + uri.toString();
         }
 
         private String saveToLegacyDownloads(String fileName, byte[] bytes) throws IOException {
@@ -112,7 +112,28 @@ public class MainActivity extends Activity {
             FileOutputStream fos = new FileOutputStream(out);
             fos.write(bytes);
             fos.close();
-            return "OK|" + out.getAbsolutePath();
+            return "OK|" + out.getAbsolutePath() + "|";
+        }
+
+        @JavascriptInterface
+        public String openFile(String uri) {
+            if (uri == null || uri.isEmpty()) {
+                return "ERR|No se puede abrir el archivo en este dispositivo";
+            }
+            final Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse(uri), "text/html");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            return "OK";
         }
 
         private void requestStoragePermission() {

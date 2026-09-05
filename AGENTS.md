@@ -136,12 +136,13 @@ Una app HTML+JS que corre dentro de un WebView en Android. No necesita internet.
 2. **Busqueda** - Filtra por SKU o nombre
 3. **Detalle de producto** - Modal con imagen, precio, descripcion completa
 4. **Agregar/quitar** - Botones +/- para cantidad
-5. **Multiples pedidos** - Crear, enviar, eliminar pedidos (IndexedDB)
+5. **Multiples pedidos** - Crear, visualizar, editar, eliminar pedidos (IndexedDB). Cada tarjeta tiene **Visualizar** y **Editar** (editar carga los articulos al catalogo para seguir agregando). En el pedido hay **Guardar pedido** y **Seguir agregando** (vuelve al catalogo); el atras del pedido vuelve al catalogo si entraste desde ahi.
 6. **Enviar por WhatsApp** - Links `wa.me` con mensaje formateado
-7. **Descargar pedido** - Descarga el pedido como archivo HTML en **Descargas** (via bridge nativo `Android.downloadPedido`). No genera PDF real: se muestra confirmacion + nota para convertirlo a PDF con una app externa (Google Drive / navegador → "Imprimir" → "Guardar como PDF").
-8. **Alerta discontinuado** - Si un producto ya no esta en catalogo actual, avisa antes de enviar
-9. **Ajustes** - Numero de WhatsApp editable, nombre del cliente
-10. **Precios en $** - Formato: `$1.234,56`
+7. **Descargar pedido** - Descarga el pedido como archivo HTML en **Descargas** (via bridge nativo `Android.downloadPedido`). No genera PDF real: se muestra confirmacion + **boton "Abrir archivo"** (Android 10+, abre el HTML en una app externa) + nota para convertirlo a PDF con una app externa (Google Drive / navegador → "Imprimir" → "Guardar como PDF").
+8. **PDF para proveedor** - Boton `downloadProviderPDF()`: HTML sin montos, encabezados Fecha/Cliente y tabla **Cantidad | Codigo | Descripcion** (columnas 12/20/68%, texto centrado). Se guarda igual que el pedido.
+9. **Alerta discontinuado** - Si un producto ya no esta en catalogo actual, avisa antes de enviar
+10. **Ajustes** - Numero de WhatsApp editable, nombre del cliente
+11. **Precios en $** - Formato: `$1.234,56`
 
 ### Estructura de Archivos
 
@@ -381,10 +382,18 @@ El formato del mensaje es:
 
 ### PDF (Descarga)
 
-El PDF **SÍ incluye precios** (es para uso interno del cliente):
-- Subtotal
-- Descuento (si aplica)
-- Total final
+Hay dos descargas, ambas vía `Android.downloadPedido` (guardan HTML en Descargas):
+
+- **Descargar PDF** (`downloadPDF()`) — para el usuario, **SÍ incluye precios**:
+  - Subtotal
+  - Descuento (si aplica)
+  - Total final
+- **PDF para proveedor** (`downloadProviderPDF()`) — **sin montos**, para enviar al proveedor:
+  - Encabezados: Fecha, Cliente
+  - Tabla `Cantidad | Codigo | Descripcion` con encabezados (columnas 12/20/68%, texto centrado)
+  - Notas (si hay) — los productos sin precio se omiten
+
+Tras descargar, el modal muestra la ubicacion y (en Android 10+) un boton **"Abrir archivo"** que llama `Android.openFile(contentUri)` para abrirlo en una app externa.
 
 ---
 
