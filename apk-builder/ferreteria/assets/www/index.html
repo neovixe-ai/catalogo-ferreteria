@@ -355,6 +355,29 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
+.modal-download { text-align: center; }
+.modal-download .icon { font-size: 42px; margin-bottom: 10px; }
+.modal-download h2 { margin-bottom: 6px; }
+.modal-download p { font-size: 14px; margin: 8px 0; color: var(--text); }
+.modal-download .path {
+  font-size: 12px;
+  color: var(--text-light);
+  word-break: break-all;
+  background: #f4f6f7;
+  border-radius: 8px;
+  padding: 8px;
+  margin: 8px 0;
+}
+.modal-download .note {
+  background: #fef9e7;
+  border-left: 4px solid var(--info);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #555;
+  text-align: left;
+  margin: 12px 0;
+}
 .orders-list {
   background: var(--card);
   border-radius: 12px;
@@ -482,6 +505,7 @@ var orders = [];
 var searchQuery = '';
 var displayCount = 50;
 var isLoading = false;
+var downloadModalOpen = false;
 
 var DB_NAME = 'PedidoDB';
 var DB_VERSION = 2;
@@ -826,9 +850,25 @@ function closeDetail() {
 }
 
 function closeModal(e) {
-  if (e.target === document.getElementById('modalOverlay')) {
+  if (e.target !== document.getElementById('modalOverlay')) {
+    return;
+  }
+  if (downloadModalOpen) {
+    closeDownloadModal();
+  } else {
     closeDetail();
   }
+}
+
+function showDownloadModal(html) {
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+  downloadModalOpen = true;
+}
+
+function closeDownloadModal() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  downloadModalOpen = false;
 }
 
 function updateCart(sku, delta) {
@@ -1033,11 +1073,11 @@ function sendWhatsApp() {
 
 function downloadPDF() {
   saveCurrentOrder();
-  
+
   var items = currentOrder.items;
   var validItems = [];
   var totals = getOrderTotals();
-  
+
   for (var sku in items) {
     var product = DATA.find(function(p) { return p.sku === sku; });
     if (product) {
@@ -1048,15 +1088,15 @@ function downloadPDF() {
       }
     }
   }
-  
+
   if (validItems.length === 0) {
     alert('No hay productos para generar PDF');
     return;
   }
-  
+
   var clientName = document.getElementById('clientName').value || '';
   var notes = document.getElementById('orderNotes').value || '';
-  
+
   var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Pedido</title>' +
     '<style>body{font-family:Arial,sans-serif;padding:20px;font-size:12px}' +
     'h1{font-size:18px;margin-bottom:5px}table{width:100%;border-collapse:collapse;margin-top:10px}' +
@@ -1067,31 +1107,63 @@ function downloadPDF() {
     '<div class="info">Fecha: ' + new Date().toLocaleDateString('es-VE') + '</div>' +
     (clientName ? '<div class="info">Cliente: ' + clientName + '</div>' : '') +
     '<table><thead><tr><th>SKU</th><th>Producto</th><th>Cant</th><th>Precio</th><th>Subtotal</th></tr></thead><tbody>';
-  
+
   validItems.forEach(function(item) {
     html += '<tr><td>' + item.sku + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + formatPrice(item.price) + '</td><td>' + formatPrice(item.subtotal) + '</td></tr>';
   });
-  
+
   html += '</tbody></table>' +
     '<div class="total">Subtotal: ' + formatPrice(totals.subtotal) + '</div>';
-  
+
   if (totals.discountPct > 0) {
     html += '<div class="total discount">Descuento (' + totals.discountPct + '%): -' + formatPrice(totals.discount) + '</div>';
   }
-  
+
   html += '<div class="total">Total: ' + formatPrice(totals.total) + '</div>' +
     (notes ? '<div class="info" style="margin-top:10px"><b>Notas:</b> ' + notes + '</div>' : '') +
     '</body></html>';
-  
+
+  var now = new Date();
+  var pad = function(n) { return (n < 10 ? '0' : '') + n; };
+  var fileName = 'pedido_' + now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate()) + '_' + pad(now.getHours()) + pad(now.getMinutes()) + '.html';
+
+  if (window.Android && window.Android.downloadPedido) {
+    var result = window.Android.downloadPedido(fileName, html);
+    var parts = result.split('|');
+    if (parts[0] === 'OK') {
+      showDownloadModal(
+        '<div class="modal-download">' +
+        '<div class="icon">&#9989;</div>' +
+        '<h2>Descarga exitosa</h2>' +
+        '<p>Tu pedido se guardo como archivo HTML.</p>' +
+        '<div class="path">' + (parts[1] || fileName) + '</div>' +
+        '<div class="note"><b>Como convertirlo a PDF:</b><br>' +
+        'Abre el archivo con Google Drive o el navegador y elige <b>&quot;Imprimir&quot; &rarr; &quot;Guardar como PDF&quot;</b>, o usa una app convertidora de HTML a PDF.</div>' +
+        '<button class="btn-full btn-secondary" onclick="closeDownloadModal()" style="margin-top:6px">Entendido</button>' +
+        '</div>'
+      );
+    } else {
+      showDownloadModal(
+        '<div class="modal-download">' +
+        '<div class="icon">&#10060;</div>' +
+        '<h2>No se pudo descargar</h2>' +
+        '<p>' + (parts[1] || 'Error al guardar el archivo') + '</p>' +
+        '<button class="btn-full btn-secondary" onclick="closeDownloadModal()" style="margin-top:6px">Cerrar</button>' +
+        '</div>'
+      );
+    }
+    return;
+  }
+
   var blob = new Blob([html], { type: 'text/html' });
   var url = URL.createObjectURL(blob);
   var a = document.createElement('a');
   a.href = url;
-  a.download = 'pedido_' + new Date().toISOString().slice(0,10) + '.html';
+  a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
-  
-  showToast('PDF descargado');
+
+  showToast('Archivo descargado');
 }
 
 function showSettings() {

@@ -138,7 +138,7 @@ Una app HTML+JS que corre dentro de un WebView en Android. No necesita internet.
 4. **Agregar/quitar** - Botones +/- para cantidad
 5. **Multiples pedidos** - Crear, enviar, eliminar pedidos (IndexedDB)
 6. **Enviar por WhatsApp** - Links `wa.me` con mensaje formateado
-7. **Descargar PDF** - Navegador imprime el pedido
+7. **Descargar pedido** - Descarga el pedido como archivo HTML en **Descargas** (via bridge nativo `Android.downloadPedido`). No genera PDF real: se muestra confirmacion + nota para convertirlo a PDF con una app externa (Google Drive / navegador → "Imprimir" → "Guardar como PDF").
 8. **Alerta discontinuado** - Si un producto ya no esta en catalogo actual, avisa antes de enviar
 9. **Ajustes** - Numero de WhatsApp editable, nombre del cliente
 10. **Precios en $** - Formato: `$1.234,56`
