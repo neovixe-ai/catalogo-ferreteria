@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#2c3e50">
+<title>Mi Pedido</title>
+<style>
+:root {
+  --primary: #2c3e50;
+  --primary-light: #34495e;
+  --success: #27ae60;
+  --success-light: #2ecc71;
+  --danger: #e74c3c;
+  --danger-light: #ec7063;
+  --info: #3498db;
+  --bg: #f5f6fa;
+  --card: #ffffff;
+  --text: #2c3e50;
+  --text-light: #7f8c8d;
+  --border: #e0e0e0;
+  --shadow: rgba(0,0,0,0.06);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding-bottom: 80px;
+  -webkit-tap-highlight-color: transparent;
+}
+.header {
+  background: var(--primary);
+  color: #fff;
+  padding: 14px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.header h1 { font-size: 17px; font-weight: 600; flex: 1; }
+.btn-back {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 2px 6px;
+  display: none;
+}
+.btn-icon {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+.screen { display: none; padding: 12px; }
+.screen.active { display: block; }
+.search-box {
+  position: sticky;
+  top: 50px;
+  z-index: 90;
+  padding: 8px 0;
+  background: var(--bg);
+}
+.search-box input {
+  width: 100%;
+  padding: 11px 14px;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  font-size: 15px;
+  outline: none;
+  background: var(--card);
+}
+.search-box input:focus { border-color: var(--info); }
+.product-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 4px var(--shadow);
+  cursor: pointer;
+  transition: transform 0.12s;
+}
+.product-card:active { transform: scale(0.98); }
+.product-card h3 { font-size: 15px; margin-bottom: 3px; }
+.product-card .meta { font-size: 12px; color: var(--text-light); }
+.product-item {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 1px 3px var(--shadow);
+}
+.product-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  background: #ecf0f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #bdc3c7;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.product-img img { width: 100%; height: 100%; object-fit: cover; }
+.product-info { flex: 1; min-width: 0; }
+.product-sku { font-size: 11px; color: var(--text-light); font-weight: 600; }
+.product-name {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.product-price { font-size: 13px; color: var(--success); font-weight: 700; margin-top: 1px; }
+.product-actions { display: flex; align-items: center; gap: 5px; flex-shrink: 0; }
+.btn-qty {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: none;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-minus { background: #fee; color: var(--danger); }
+.btn-plus { background: #e8f8f5; color: var(--success); }
+.qty-count { font-size: 15px; font-weight: 700; min-width: 22px; text-align: center; }
+.bottom-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+  z-index: 100;
+  cursor: pointer;
+}
+.bottom-bar.hidden { display: none; }
+.bottom-bar .total { font-size: 17px; font-weight: 700; }
+.bottom-bar .count { font-size: 13px; }
+.order-item {
+  background: var(--card);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.order-item .info { flex: 1; }
+.order-item .sku { font-size: 11px; color: var(--text-light); }
+.order-item .name { font-size: 14px; font-weight: 500; }
+.order-item .price { font-size: 12px; color: var(--success); }
+.order-item input {
+  width: 48px;
+  padding: 4px;
+  text-align: center;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 14px;
+}
+.order-item .remove {
+  background: #fee;
+  color: var(--danger);
+  border: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 15px;
+  cursor: pointer;
+  margin-left: 6px;
+}
+.order-total {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-top: 12px;
+  text-align: right;
+}
+.order-total .label { font-size: 13px; color: var(--text-light); }
+.order-total .amount { font-size: 22px; font-weight: 700; color: var(--success); }
+.discount-box {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 14px;
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.discount-box label { font-size: 13px; font-weight: 600; white-space: nowrap; }
+.discount-box input {
+  width: 70px;
+  padding: 8px;
+  text-align: center;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+}
+.discount-box input:focus { border-color: var(--info); outline: none; }
+.discount-box .pct { font-size: 15px; font-weight: 700; color: var(--text-light); }
+.discount-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-light);
+  margin-top: 8px;
+}
+.discount-line .value { color: var(--danger); font-weight: 600; }
+.final-line {
+  display: flex;
+  justify-content: space-between;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--success);
+  margin-top: 6px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.form-group { margin-bottom: 10px; }
+.form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 3px; }
+.form-group input, .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+.form-group input:focus, .form-group textarea:focus { border-color: var(--info); }
+.form-group textarea { resize: vertical; min-height: 50px; }
+.btn-full {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+}
+.btn-whatsapp { background: #25d366; color: #fff; }
+.btn-pdf { background: var(--danger); color: #fff; }
+.btn-settings { background: var(--info); color: #fff; }
+.btn-secondary { background: #95a5a6; color: #fff; }
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-light);
+}
+.empty-state .icon { font-size: 44px; margin-bottom: 10px; }
+.loading { text-align: center; padding: 30px; color: var(--text-light); }
+.info-bar {
+  background: #ebf5fb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  color: var(--info);
+  margin-bottom: 10px;
+}
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--success);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  z-index: 200;
+  display: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 150;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--card);
+  border-radius: 16px;
+  padding: 20px;
+  max-width: 360px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-img {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  background: #ecf0f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: #bdc3c7;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.modal-img img { width: 100%; height: 100%; object-fit: contain; }
+.modal h2 { font-size: 18px; margin-bottom: 8px; }
+.modal .sku { font-size: 13px; color: var(--text-light); margin-bottom: 8px; }
+.modal .price { font-size: 22px; color: var(--success); font-weight: 700; margin-bottom: 16px; }
+.modal-actions { display: flex; gap: 10px; }
+.modal-actions .btn-qty {
+  width: 44px;
+  height: 44px;
+  font-size: 20px;
+}
+.modal-actions .qty-count {
+  font-size: 20px;
+  min-width: 40px;
+}
+.modal-actions .btn-add {
+  flex: 1;
+  padding: 12px;
+  background: var(--success);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.orders-list {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+.orders-list h3 { font-size: 15px; margin-bottom: 4px; }
+.orders-list .meta { font-size: 12px; color: var(--text-light); }
+.orders-list .total { font-size: 14px; color: var(--success); font-weight: 600; margin-top: 4px; }
+.settings-card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 10px;
+}
+.settings-card h3 { font-size: 15px; margin-bottom: 12px; }
+.discontinued-warning {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: #856404;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <button class="btn-back" id="btnBack" onclick="goBack()">&#8249;</button>
+  <h1 id="headerTitle">Mis Pedidos</h1>
+  <button class="btn-icon" id="btnSettings" onclick="showSettings()">&#9881;</button>
+</div>
+
+<div class="screen active" id="screenOrders">
+  <div id="ordersList"></div>
+  <button class="btn-full btn-settings" onclick="newOrder()" style="margin-top:12px">+ Nuevo Pedido</button>
+</div>
+
+<div class="screen" id="screenCatalog">
+  <div class="search-box">
+    <input type="search" id="searchInput" placeholder="Buscar SKU o producto..." oninput="search()">
+  </div>
+  <div id="productsList"></div>
+  <div id="sentinel" style="height:1px"></div>
+</div>
+
+<div class="screen" id="screenDetail">
+  <div id="detailContent"></div>
+</div>
+
+<div class="screen" id="screenOrder">
+  <div id="orderItems"></div>
+  <div class="order-total">
+    <div class="label">Subtotal</div>
+    <div class="amount" id="orderSubtotalDisplay">$0.00</div>
+    <div class="discount-box">
+      <label>Descuento:</label>
+      <input type="number" id="discountPct" min="0" max="100" value="0" onchange="renderOrderItems()" oninput="renderOrderItems()">
+      <span class="pct">%</span>
+    </div>
+    <div class="discount-line">
+      <span>Descuento</span>
+      <span class="value" id="discountAmount">-$0.00</span>
+    </div>
+    <div class="final-line">
+      <span>Total</span>
+      <span id="orderTotal">$0.00</span>
+    </div>
+  </div>
+  <div class="form-group" style="margin-top:14px">
+    <label>Nombre del cliente</label>
+    <input id="clientName" placeholder="Tu nombre">
+  </div>
+  <div class="form-group">
+    <label>Notas</label>
+    <textarea id="orderNotes" placeholder="Instrucciones especiales..."></textarea>
+  </div>
+  <div id="discontinuedWarning"></div>
+  <button class="btn-full btn-whatsapp" onclick="sendWhatsApp()">Enviar por WhatsApp</button>
+  <button class="btn-full btn-pdf" onclick="downloadPDF()">Descargar PDF</button>
+</div>
+
+<div class="screen" id="screenSettings">
+  <div class="settings-card">
+    <h3>Ajustes</h3>
+    <div class="form-group">
+      <label>Numero de WhatsApp del proveedor</label>
+      <input id="whatsappNumber" placeholder="584121234567" type="tel">
+    </div>
+    <div class="form-group">
+      <label>Tu nombre (para pedidos)</label>
+      <input id="clientNameSettings" placeholder="Tu nombre">
+    </div>
+    <button class="btn-full btn-settings" onclick="saveSettings()">Guardar</button>
+  </div>
+  <div class="settings-card">
+    <h3>Catalogo</h3>
+    <div class="info-bar" id="catalogInfo"></div>
+  </div>
+</div>
+
+<div class="bottom-bar hidden" id="bottomBar" onclick="viewOrder()">
+  <div>
+    <div class="count"><span id="itemCount">0</span> productos</div>
+    <div class="total">$<span id="orderSubtotal">0.00</span></div>
+  </div>
+  <div style="font-size:13px">Ver pedido &#8250;</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+var DATA = [];
+var cart = {};
+var currentOrder = null;
+var orders = [];
+var searchQuery = '';
+var displayCount = 50;
+var isLoading = false;
+
+var DB_NAME = 'PedidoDB';
+var DB_VERSION = 2;
+
+function openDB(cb) {
+  var req = indexedDB.open(DB_NAME, DB_VERSION);
+  req.onupgradeneeded = function(e) {
+    var db = e.target.result;
+    if (!db.objectStoreNames.contains('products')) {
+      db.createObjectStore('products', { keyPath: 'sku' });
+    }
+    if (!db.objectStoreNames.contains('orders')) {
+      db.createObjectStore('orders', { keyPath: 'id' });
+    }
+  };
+  req.onsuccess = function(e) { cb(e.target.result); };
+  req.onerror = function() { cb(null); };
+}
+
+function saveProducts(products, cb) {
+  openDB(function(db) {
+    if (!db) { cb(false); return; }
+    var tx = db.transaction('products', 'readwrite');
+    var store = tx.objectStore('products');
+    products.forEach(function(p) { store.put(p); });
+    tx.oncomplete = function() { cb(true); };
+    tx.onerror = function() { cb(false); };
+  });
+}
+
+function loadProducts(cb) {
+  openDB(function(db) {
+    if (!db) { cb([]); return; }
+    var tx = db.transaction('products', 'readonly');
+    var req = tx.objectStore('products').getAll();
+    req.onsuccess = function() { cb(req.result || []); };
+    req.onerror = function() { cb([]); };
+  });
+}
+
+function saveOrders(cb) {
+  openDB(function(db) {
+    if (!db) { cb(false); return; }
+    var tx = db.transaction('orders', 'readwrite');
+    var store = tx.objectStore('orders');
+    store.put({ id: 'current', orders: orders });
+    tx.oncomplete = function() { cb(true); };
+    tx.onerror = function() { cb(false); };
+  });
+}
+
+function loadOrders(cb) {
+  openDB(function(db) {
+    if (!db) { cb([]); return; }
+    var tx = db.transaction('orders', 'readonly');
+    var req = tx.objectStore('orders').get('current');
+    req.onsuccess = function() {
+      var data = req.result;
+      cb(data ? data.orders : []);
+    };
+    req.onerror = function() { cb([]); };
+  });
+}
+
+function getSetting(key, defaultVal) {
+  return localStorage.getItem(key) || defaultVal;
+}
+
+function setSetting(key, val) {
+  localStorage.setItem(key, val);
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(function() { t.style.display = 'none'; }, 3000);
+}
+
+function formatPrice(val) {
+  if (val === null || val === undefined || isNaN(val)) return '-';
+  return '$' + val.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+function parsePrice(priceStr) {
+  if (!priceStr) return null;
+  var cleaned = priceStr.replace(/[$\s]/g, '').replace(',', '.');
+  var val = parseFloat(cleaned);
+  return isNaN(val) ? null : val;
+}
+
+function getShortName(name) {
+  if (!name) return '';
+  var words = name.split(' ').filter(function(w) { return w.length > 0; });
+  if (words.length <= 3) return name;
+  return words.slice(0, 3).join(' ');
+}
+
+function init() {
+  loadProducts(function(saved) {
+    if (saved && saved.length > 0) {
+      DATA = saved;
+    } else {
+      DATA = loadEmbeddedData();
+      saveProducts(DATA, function() {});
+    }
+    loadOrders(function(savedOrders) {
+      orders = savedOrders;
+      updateCatalogInfo();
+      renderOrders();
+    });
+  });
+}
+
+function loadEmbeddedData() {
+  var embedded = [
+    {"sku":"COC003","nombre":"ANILLO DE COMPRESION 5/8","precio_texto":"0,64"},
+    {"sku":"COC004","nombre":"BANDEJA P/ RESISTENCIA DE COCINA ELECTRICA 6\"","precio_texto":"3,54"},
+    {"sku":"COC005","nombre":"BANDEJA P/ RESISTENCIA DE COCINA ELECTRICA 8\"","precio_texto":"3,67"},
+    {"sku":"COC007","nombre":"BOQUILLA DE VALVULA MACHO 1/4","precio_texto":"1,87"},
+    {"sku":"COC008","nombre":"BOQUILLA PARA TUBO QUEMADOR 1/2","precio_texto":"3,40"},
+    {"sku":"COC009","nombre":"BOQUILLA VALVULA 1/8 NPT (SIRVE A TAPPAN)","precio_texto":"1,00"},
+    {"sku":"COC017","nombre":"CONECTOR CACHIMBO 3/8 X 3/8","precio_texto":"1,07"},
+    {"sku":"COC031","nombre":"CONECTOR ESPIGA 3/8","precio_texto":"2,34"},
+    {"sku":"COC032","nombre":"CONECTOR FLARE*NPT HEMBRA 3/8*3/8","precio_texto":"3,14"},
+    {"sku":"COC034","nombre":"COPA ESTANDAR FLARE 1/4","precio_texto":"0,91"},
+    {"sku":"COC038","nombre":"CORONA ESMALTADO QUEMADOR MEDIANO 075MM","precio_texto":"1,80"},
+    {"sku":"COC040","nombre":"CORONA ESMALTADA QUEMADOR LARGO","precio_texto":"2,40"},
+    {"sku":"COC041","nombre":"CORONA ENCENDIDO QUEMADOR ELECTRONICO","precio_texto":"2,67"},
+    {"sku":"COC042","nombre":"CORONA ESMALTADO QUEMADOR GRANDE 100MM","precio_texto":"1,94"},
+    {"sku":"COC050","nombre":"FISTO CHALLENGER ROSCA GRUESA","precio_texto":"0,54"},
+    {"sku":"COC051","nombre":"FISTO HACEB MODERNO","precio_texto":"0,54"},
+    {"sku":"COC052","nombre":"FISTO ICASA","precio_texto":"0,54"},
+    {"sku":"COC053","nombre":"FISTO MABE ROSCA FINA","precio_texto":"0,54"},
+    {"sku":"COC054","nombre":"FISTO N10 HACEB ANTIGUO","precio_texto":"0,54"},
+    {"sku":"COC055","nombre":"FISTO N15 SUECO","precio_texto":"0,54"},
+    {"sku":"COC056","nombre":"FISTO N17 SUPERIOR ROSCA FINA PEQUENA","precio_texto":"0,54"},
+    {"sku":"COC057","nombre":"FISTO N18 MABE VENEZOLANO","precio_texto":"0,54"},
+    {"sku":"COC058","nombre":"FISTO N19 CONTINENTAL ROSCA GRUESA","precio_texto":"0,54"},
+    {"sku":"COC059","nombre":"FISTO N20 FV","precio_texto":"0,54"},
+    {"sku":"COC060","nombre":"FISTO N21 MABE ROSCA FINA","precio_texto":"0,54"},
+    {"sku":"COC061","nombre":"FISTO N22 MABE GRUESA","precio_texto":"0,54"},
+    {"sku":"COC062","nombre":"FISTO N23 SUPERIOR GRANDE","precio_texto":"0,54"},
+    {"sku":"COC063","nombre":"FISTO N24 FV GRANDE","precio_texto":"0,54"},
+    {"sku":"COC064","nombre":"FISTO N25 MABE GRANDE","precio_texto":"0,54"},
+    {"sku":"COC065","nombre":"FISTO N26 IUSA","precio_texto":"0,54"}
+  ];
+  return embedded;
+}
+
+function renderOrders() {
+  var el = document.getElementById('ordersList');
+  if (orders.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">&#128230;</div><p>No hay pedidos</p><p style="font-size:13px;margin-top:8px">Crea un nuevo pedido para comenzar</p></div>';
+    return;
+  }
+  el.innerHTML = orders.map(function(order, idx) {
+    var itemCount = Object.keys(order.items).length;
+    var total = calculateOrderTotal(order.items);
+    var date = new Date(order.date).toLocaleDateString('es-VE');
+    return '<div class="orders-list" onclick="openOrder(' + idx + ')">' +
+      '<h3>Pedido ' + (idx + 1) + '</h3>' +
+      '<div class="meta">' + date + ' - ' + itemCount + ' productos</div>' +
+      '<div class="total">' + formatPrice(total) + '</div>' +
+      '<button class="remove" onclick="event.stopPropagation();deleteOrder(' + idx + ')" style="position:absolute;top:10px;right:10px;background:#fee;color:#e74c3c;border:none;width:28px;height:28px;border-radius:50%;font-size:16px;cursor:pointer">&times;</button>' +
+      '</div>';
+  }).join('');
+}
+
+function calculateOrderTotal(items) {
+  var total = 0;
+  for (var sku in items) {
+    var product = DATA.find(function(p) { return p.sku === sku; });
+    if (product) {
+      var price = parsePrice(product.precio_texto);
+      if (price) total += price * items[sku];
+    }
+  }
+  return total;
+}
+
+function newOrder() {
+  currentOrder = { id: Date.now(), items: {}, date: new Date().toISOString(), notes: '', discountPct: 0, clientName: '' };
+  cart = {};
+  showScreen('screenCatalog');
+  document.getElementById('headerTitle').textContent = 'LC 2050';
+  document.getElementById('btnBack').style.display = 'inline';
+  document.getElementById('discountPct').value = 0;
+  renderProducts();
+  setupInfiniteScroll();
+}
+
+function openOrder(idx) {
+  currentOrder = orders[idx];
+  cart = Object.assign({}, currentOrder.items);
+  showScreen('screenOrder');
+  document.getElementById('headerTitle').textContent = 'Pedido ' + (idx + 1);
+  document.getElementById('btnBack').style.display = 'inline';
+  document.getElementById('discountPct').value = currentOrder.discountPct || 0;
+  document.getElementById('clientName').value = currentOrder.clientName || '';
+  document.getElementById('orderNotes').value = currentOrder.notes || '';
+  renderOrderItems();
+}
+
+function deleteOrder(idx) {
+  if (!confirm('Eliminar este pedido?')) return;
+  orders.splice(idx, 1);
+  saveOrders(function() {
+    renderOrders();
+    showToast('Pedido eliminado');
+  });
+}
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.getElementById(id).classList.add('active');
+}
+
+function goBack() {
+  var current = document.querySelector('.screen.active');
+  if (current.id === 'screenOrder') {
+    saveCurrentOrder();
+    showScreen('screenOrders');
+    document.getElementById('headerTitle').textContent = 'Mis Pedidos';
+    document.getElementById('btnBack').style.display = 'none';
+    document.getElementById('bottomBar').classList.add('hidden');
+    renderOrders();
+  } else if (current.id === 'screenCatalog') {
+    showScreen('screenOrders');
+    document.getElementById('headerTitle').textContent = 'Mis Pedidos';
+    document.getElementById('btnBack').style.display = 'none';
+    document.getElementById('bottomBar').classList.add('hidden');
+    renderOrders();
+  } else if (current.id === 'screenDetail') {
+    showScreen('screenCatalog');
+    document.getElementById('headerTitle').textContent = 'LC 2050';
+  } else if (current.id === 'screenSettings') {
+    showScreen('screenOrders');
+    document.getElementById('headerTitle').textContent = 'Mis Pedidos';
+    document.getElementById('btnBack').style.display = 'none';
+  }
+}
+
+function search() {
+  searchQuery = document.getElementById('searchInput').value.toLowerCase();
+  displayCount = 50;
+  renderProducts();
+}
+
+function renderProducts() {
+  var el = document.getElementById('productsList');
+  var filtered = DATA;
+  if (searchQuery) {
+    filtered = DATA.filter(function(p) {
+      return (p.sku && p.sku.toLowerCase().indexOf(searchQuery) >= 0) ||
+             (p.nombre && p.nombre.toLowerCase().indexOf(searchQuery) >= 0);
+    });
+  }
+  var products = filtered.slice(0, displayCount);
+  if (products.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="icon">&#128270;</div><p>Sin resultados</p></div>';
+    return;
+  }
+  el.innerHTML = products.map(function(p) {
+    var qty = cart[p.sku] || 0;
+    var price = parsePrice(p.precio_texto);
+    var imgSrc = 'proveedores/lc_2050/images/' + p.sku + '.webp';
+    return '<div class="product-item" onclick="showDetail(\'' + p.sku + '\')">' +
+      '<div class="product-img"><img src="' + imgSrc + '" onerror="this.parentElement.innerHTML=\'&#128230;\'" alt=""></div>' +
+      '<div class="product-info">' +
+        '<div class="product-sku">' + p.sku + '</div>' +
+        '<div class="product-name">' + p.nombre + '</div>' +
+        (price ? '<div class="product-price">' + formatPrice(price) + '</div>' : '') +
+      '</div>' +
+      '<div class="product-actions">' +
+        (qty > 0 ? '<button class="btn-qty btn-minus" onclick="event.stopPropagation();updateCart(\'' + p.sku + '\',-1)">-</button><span class="qty-count">' + qty + '</span>' : '') +
+        '<button class="btn-qty btn-plus" onclick="event.stopPropagation();updateCart(\'' + p.sku + '\',1)">+</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  updateBottomBar();
+}
+
+function setupInfiniteScroll() {
+  var observer = new IntersectionObserver(function(entries) {
+    if (entries[0].isIntersecting && !isLoading) {
+      var filtered = searchQuery ? DATA.filter(function(p) {
+        return (p.sku && p.sku.toLowerCase().indexOf(searchQuery) >= 0) ||
+               (p.nombre && p.nombre.toLowerCase().indexOf(searchQuery) >= 0);
+      }) : DATA;
+      if (displayCount < filtered.length) {
+        isLoading = true;
+        displayCount += 50;
+        renderProducts();
+        isLoading = false;
+      }
+    }
+  }, { threshold: 0.1 });
+  var sentinel = document.getElementById('sentinel');
+  if (sentinel) observer.observe(sentinel);
+}
+
+function showDetail(sku) {
+  var product = DATA.find(function(p) { return p.sku === sku; });
+  if (!product) return;
+  var qty = cart[sku] || 0;
+  var price = parsePrice(product.precio_texto);
+  var imgSrc = 'proveedores/lc_2050/images/' + sku + '.webp';
+  var html = '<div class="modal-img"><img src="' + imgSrc + '" onerror="this.parentElement.innerHTML=\'&#128230;\'" alt=""></div>' +
+    '<h2>' + product.nombre + '</h2>' +
+    '<div class="sku">SKU: ' + sku + '</div>' +
+    (price ? '<div class="price">' + formatPrice(price) + '</div>' : '<div class="price">Sin precio</div>') +
+    '<div class="modal-actions">' +
+      '<button class="btn-qty btn-minus" onclick="updateDetailQty(\'' + sku + '\',-1)">-</button>' +
+      '<span class="qty-count" id="detailQty">' + qty + '</span>' +
+      '<button class="btn-qty btn-plus" onclick="updateDetailQty(\'' + sku + '\',1)">+</button>' +
+      '<button class="btn-add" onclick="closeDetail()">Listo</button>' +
+    '</div>';
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('active');
+  showScreen('screenDetail');
+}
+
+function updateDetailQty(sku, delta) {
+  updateCart(sku, delta);
+  document.getElementById('detailQty').textContent = cart[sku] || 0;
+}
+
+function closeDetail() {
+  document.getElementById('modalOverlay').classList.remove('active');
+  showScreen('screenCatalog');
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('modalOverlay')) {
+    closeDetail();
+  }
+}
+
+function updateCart(sku, delta) {
+  var current = cart[sku] || 0;
+  var newQty = current + delta;
+  if (newQty <= 0) {
+    delete cart[sku];
+  } else {
+    cart[sku] = newQty;
+  }
+  renderProducts();
+}
+
+function updateBottomBar() {
+  var count = Object.keys(cart).length;
+  var bar = document.getElementById('bottomBar');
+  if (count === 0) {
+    bar.classList.add('hidden');
+    return;
+  }
+  bar.classList.remove('hidden');
+  document.getElementById('itemCount').textContent = count;
+  var total = 0;
+  for (var sku in cart) {
+    var product = DATA.find(function(p) { return p.sku === sku; });
+    if (product) {
+      var price = parsePrice(product.precio_texto);
+      if (price) total += price * cart[sku];
+    }
+  }
+  document.getElementById('orderSubtotal').textContent = total.toFixed(2);
+}
+
+function viewOrder() {
+  if (!currentOrder) {
+    currentOrder = { id: Date.now(), items: {}, date: new Date().toISOString(), notes: '', discountPct: 0, clientName: '' };
+  }
+  currentOrder.items = Object.assign({}, cart);
+  showScreen('screenOrder');
+  document.getElementById('headerTitle').textContent = 'Mi Pedido';
+  document.getElementById('btnBack').style.display = 'inline';
+  document.getElementById('discountPct').value = currentOrder.discountPct || 0;
+  renderOrderItems();
+}
+
+function renderOrderItems() {
+  var el = document.getElementById('orderItems');
+  var items = currentOrder.items;
+  var subtotal = 0;
+  var hasDiscontinued = false;
+  var discontinuedItems = [];
+  
+  var rows = Object.keys(items).map(function(sku) {
+    var qty = items[sku];
+    var product = DATA.find(function(p) { return p.sku === sku; });
+    var name = product ? product.nombre : sku;
+    var price = product ? parsePrice(product.precio_texto) : null;
+    var itemTotal = price ? price * qty : 0;
+    subtotal += itemTotal;
+    
+    if (!product || !price) {
+      hasDiscontinued = true;
+      discontinuedItems.push(sku);
+    }
+    
+    return '<div class="order-item">' +
+      '<div class="info">' +
+        '<div class="sku">' + sku + '</div>' +
+        '<div class="name">' + name + '</div>' +
+        '<div class="price">' + (price ? formatPrice(price) + ' c/u' : 'Sin precio') + '</div>' +
+      '</div>' +
+      '<input type="number" value="' + qty + '" min="1" onchange="updateOrderQty(\'' + sku + '\',this.value)">' +
+      '<button class="remove" onclick="removeFromOrder(\'' + sku + '\')">&times;</button>' +
+    '</div>';
+  });
+  
+  el.innerHTML = rows.length ? rows.join('') : '<div class="empty-state"><div class="icon">&#128722;</div><p>Pedido vacio</p></div>';
+  
+  var discountPct = parseFloat(document.getElementById('discountPct').value) || 0;
+  if (discountPct < 0) discountPct = 0;
+  if (discountPct > 100) discountPct = 100;
+  
+  var discount = subtotal * (discountPct / 100);
+  var total = subtotal - discount;
+  
+  document.getElementById('orderSubtotalDisplay').textContent = formatPrice(subtotal);
+  document.getElementById('discountAmount').textContent = '-' + formatPrice(discount);
+  document.getElementById('orderTotal').textContent = formatPrice(total);
+  
+  var warningEl = document.getElementById('discontinuedWarning');
+  if (hasDiscontinued) {
+    warningEl.innerHTML = '<div class="discontinued-warning">&#9888; Productos sin precio o descontinuados: ' + discontinuedItems.join(', ') + '. No se incluiran en el pedido por WhatsApp.</div>';
+  } else {
+    warningEl.innerHTML = '';
+  }
+}
+
+function getOrderTotals() {
+  var items = currentOrder.items;
+  var subtotal = 0;
+  for (var sku in items) {
+    var product = DATA.find(function(p) { return p.sku === sku; });
+    if (product) {
+      var price = parsePrice(product.precio_texto);
+      if (price) subtotal += price * items[sku];
+    }
+  }
+  var discountPct = parseFloat(document.getElementById('discountPct').value) || 0;
+  if (discountPct < 0) discountPct = 0;
+  if (discountPct > 100) discountPct = 100;
+  var discount = subtotal * (discountPct / 100);
+  var total = subtotal - discount;
+  return { subtotal: subtotal, discountPct: discountPct, discount: discount, total: total };
+}
+
+function updateOrderQty(sku, val) {
+  var qty = parseInt(val);
+  if (isNaN(qty) || qty <= 0) {
+    delete currentOrder.items[sku];
+  } else {
+    currentOrder.items[sku] = qty;
+  }
+  cart = Object.assign({}, currentOrder.items);
+  renderOrderItems();
+  updateBottomBar();
+}
+
+function removeFromOrder(sku) {
+  delete currentOrder.items[sku];
+  cart = Object.assign({}, currentOrder.items);
+  renderOrderItems();
+  updateBottomBar();
+}
+
+function saveCurrentOrder() {
+  if (!currentOrder) return;
+  currentOrder.items = Object.assign({}, cart);
+  currentOrder.notes = document.getElementById('orderNotes').value;
+  currentOrder.discountPct = parseFloat(document.getElementById('discountPct').value) || 0;
+  currentOrder.clientName = document.getElementById('clientName').value || '';
+  
+  var existingIdx = -1;
+  for (var i = 0; i < orders.length; i++) {
+    if (orders[i].id === currentOrder.id) {
+      existingIdx = i;
+      break;
+    }
+  }
+  
+  if (existingIdx >= 0) {
+    orders[existingIdx] = currentOrder;
+  } else if (Object.keys(currentOrder.items).length > 0) {
+    orders.push(currentOrder);
+  }
+  
+  saveOrders(function() {});
+}
+
+function sendWhatsApp() {
+  saveCurrentOrder();
+  
+  var phone = getSetting('whatsappNumber', '584121234567');
+  var clientName = document.getElementById('clientName').value || getSetting('clientName', '');
+  var items = currentOrder.items;
+  
+  var validItems = [];
+  for (var sku in items) {
+    var product = DATA.find(function(p) { return p.sku === sku; });
+    if (product && parsePrice(product.precio_texto)) {
+      validItems.push({
+        sku: sku,
+        name: getShortName(product.nombre),
+        qty: items[sku]
+      });
+    }
+  }
+  
+  if (validItems.length === 0) {
+    alert('No hay productos validos para enviar');
+    return;
+  }
+  
+  var lines = ['*Pedido Mi Pedido*', ''];
+  if (clientName) lines.push('*Cliente:* ' + clientName);
+  lines.push('*Fecha:* ' + new Date().toLocaleDateString('es-VE'));
+  lines.push('');
+  lines.push('*Productos:*');
+  
+  validItems.forEach(function(item) {
+    lines.push('*' + item.sku + '* ' + item.name + ' x' + item.qty);
+  });
+  
+  if (document.getElementById('orderNotes').value) {
+    lines.push('');
+    lines.push('*Notas:* ' + document.getElementById('orderNotes').value);
+  }
+  
+  var message = encodeURIComponent(lines.join('\n'));
+  var url = 'https://wa.me/' + phone + '?text=' + message;
+  window.open(url, '_blank');
+}
+
+function downloadPDF() {
+  saveCurrentOrder();
+  
+  var items = currentOrder.items;
+  var validItems = [];
+  var totals = getOrderTotals();
+  
+  for (var sku in items) {
+    var product = DATA.find(function(p) { return p.sku === sku; });
+    if (product) {
+      var price = parsePrice(product.precio_texto);
+      if (price) {
+        var subtotal = price * items[sku];
+        validItems.push({ sku: sku, name: product.nombre, qty: items[sku], price: price, subtotal: subtotal });
+      }
+    }
+  }
+  
+  if (validItems.length === 0) {
+    alert('No hay productos para generar PDF');
+    return;
+  }
+  
+  var clientName = document.getElementById('clientName').value || '';
+  var notes = document.getElementById('orderNotes').value || '';
+  
+  var html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Pedido</title>' +
+    '<style>body{font-family:Arial,sans-serif;padding:20px;font-size:12px}' +
+    'h1{font-size:18px;margin-bottom:5px}table{width:100%;border-collapse:collapse;margin-top:10px}' +
+    'th,td{border:1px solid #ddd;padding:6px;text-align:left}th{background:#2c3e50;color:#fff}' +
+    '.total{font-size:16px;font-weight:bold;text-align:right;margin-top:10px}' +
+    '.discount{color:#e74c3c}.info{margin-bottom:10px;color:#555}</style></head><body>' +
+    '<h1>Pedido - LC 2050</h1>' +
+    '<div class="info">Fecha: ' + new Date().toLocaleDateString('es-VE') + '</div>' +
+    (clientName ? '<div class="info">Cliente: ' + clientName + '</div>' : '') +
+    '<table><thead><tr><th>SKU</th><th>Producto</th><th>Cant</th><th>Precio</th><th>Subtotal</th></tr></thead><tbody>';
+  
+  validItems.forEach(function(item) {
+    html += '<tr><td>' + item.sku + '</td><td>' + item.name + '</td><td>' + item.qty + '</td><td>' + formatPrice(item.price) + '</td><td>' + formatPrice(item.subtotal) + '</td></tr>';
+  });
+  
+  html += '</tbody></table>' +
+    '<div class="total">Subtotal: ' + formatPrice(totals.subtotal) + '</div>';
+  
+  if (totals.discountPct > 0) {
+    html += '<div class="total discount">Descuento (' + totals.discountPct + '%): -' + formatPrice(totals.discount) + '</div>';
+  }
+  
+  html += '<div class="total">Total: ' + formatPrice(totals.total) + '</div>' +
+    (notes ? '<div class="info" style="margin-top:10px"><b>Notas:</b> ' + notes + '</div>' : '') +
+    '</body></html>';
+  
+  var blob = new Blob([html], { type: 'text/html' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'pedido_' + new Date().toISOString().slice(0,10) + '.html';
+  a.click();
+  URL.revokeObjectURL(url);
+  
+  showToast('PDF descargado');
+}
+
+function showSettings() {
+  showScreen('screenSettings');
+  document.getElementById('headerTitle').textContent = 'Ajustes';
+  document.getElementById('btnBack').style.display = 'inline';
+  document.getElementById('whatsappNumber').value = getSetting('whatsappNumber', '584121234567');
+  document.getElementById('clientNameSettings').value = getSetting('clientName', '');
+}
+
+function saveSettings() {
+  setSetting('whatsappNumber', document.getElementById('whatsappNumber').value);
+  setSetting('clientName', document.getElementById('clientNameSettings').value);
+  showToast('Ajustes guardados');
+  goBack();
+}
+
+function updateCatalogInfo() {
+  var el = document.getElementById('catalogInfo');
+  el.textContent = 'LC 2050 - ' + DATA.length + ' productos';
+}
+
+init();
+</script>
+</body>
+</html>

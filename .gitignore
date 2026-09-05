@@ -1,3 +1,7 @@
 *.pdf
 pedido-lc2050.zip
 dist/
+apk-builder/build/
+apk-builder/ferreteria/app-debug.apk
+*.apk
+*.keystore
