@@ -580,37 +580,32 @@ function getShortName(name) {
 }
 
 function init() {
-  loadProducts(function(saved) {
-    if (saved && saved.length > 0) {
-      DATA = saved;
+  fetch('data/productos.json')
+    .then(function(r) { return r.json(); })
+    .then(function(json) {
+      DATA = json;
+      saveProducts(DATA, function() {});
       loadOrders(function(savedOrders) {
         orders = savedOrders;
         updateCatalogInfo();
         renderOrders();
       });
-    } else {
-      fetch('data/productos.json')
-        .then(function(r) { return r.json(); })
-        .then(function(json) {
-          DATA = json;
-          saveProducts(DATA, function() {});
-          loadOrders(function(savedOrders) {
-            orders = savedOrders;
-            updateCatalogInfo();
-            renderOrders();
-          });
-        })
-        .catch(function() {
+    })
+    .catch(function() {
+      loadProducts(function(saved) {
+        if (saved && saved.length > 0) {
+          DATA = saved;
+        } else {
           DATA = loadEmbeddedData();
           saveProducts(DATA, function() {});
-          loadOrders(function(savedOrders) {
-            orders = savedOrders;
-            updateCatalogInfo();
-            renderOrders();
-          });
+        }
+        loadOrders(function(savedOrders) {
+          orders = savedOrders;
+          updateCatalogInfo();
+          renderOrders();
         });
-    }
-  });
+      });
+    });
 }
 
 function loadEmbeddedData() {
