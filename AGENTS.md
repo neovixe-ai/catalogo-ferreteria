@@ -46,6 +46,8 @@ WINDOWS (editor)  →  git push  →  TERMUX (build)  →  APK  →  WhatsApp
 4. Construyes el APK con `./build.sh`
 5. Envias el APK por WhatsApp
 
+> **Despues de `git pull`** revisa que cambio con `git log --oneline -5`. Si hay cambios en `assets/www/` o en el catalogo, reconstruye el APK con `cd apk-builder && ./build.sh ferreteria` y reinstala en el telefono (`adb install -r ferreteria-app.apk` o envialo por WhatsApp). Los cambios del catalogo NO llegan al telefono hasta instalar el APK nuevo.
+
 ---
 
 ## PARTE 1: Extraccion de Catalogos (scraper/)
