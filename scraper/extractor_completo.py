@@ -113,8 +113,8 @@ def parsear_productos_pagina(texto):
     return productos
 
 
-def extraer_imagenes_pagina(doc, pagina_idx, sku_izq, sku_der):
-    """Extrae imágenes de una página y las guarda con nombre SKU."""
+def extraer_imagenes_pagina(doc, pagina_idx, skus_pagina):
+    """Extrae TODAS las imágenes de productos de una página y las guarda con nombre SKU."""
     page = doc[pagina_idx]
     images = page.get_images(full=True)
 
@@ -124,21 +124,31 @@ def extraer_imagenes_pagina(doc, pagina_idx, sku_izq, sku_der):
         rects = page.get_image_rects(xref)
         if rects:
             rect = rects[0]
-            # Filtrar imágenes muy grandes (fondos)
-            if rect.width < 300 and rect.height < 300:
-                items.append({
-                    'xref': xref,
-                    'x': rect.x0,
-                    'y': rect.y0,
-                    'w': rect.width,
-                    'h': rect.height
-                })
+            # Filtrar imagen de fondo (muy grande)
+            if rect.width > 500 or rect.height > 500:
+                continue
+            items.append({
+                'xref': xref,
+                'x': rect.x0,
+                'y': rect.y0,
+                'w': rect.width,
+                'h': rect.height
+            })
 
     # Ordenar por posición visual: primero fila (Y), luego columna (X)
     items.sort(key=lambda p: (round(p['y'] / 100), p['x']))
 
+    # skus_pagina viene en orden: izq1, der1, izq2, der2, ...
+    # Imágenes vienen en orden visual: fila1_izq, fila1_der, fila2_izq, ...
     rutas = {}
     for idx, item in enumerate(items):
+        if idx >= len(skus_pagina):
+            break
+
+        sku = skus_pagina[idx]
+        if not sku:
+            continue
+
         try:
             pix = fitz.Pixmap(doc, item['xref'])
             if pix.n - pix.alpha > 3:
@@ -146,20 +156,11 @@ def extraer_imagenes_pagina(doc, pagina_idx, sku_izq, sku_der):
             elif pix.alpha:
                 pix = fitz.Pixmap(pix, 0)
 
-            # Asignar SKU según posición
-            if idx == 0 and sku_izq:
-                nombre = f"{sku_izq}.jpg"
-            elif idx == 1 and sku_der:
-                nombre = f"{sku_der}.jpg"
-            elif idx == 0 and sku_izq:
-                nombre = f"{sku_izq}.jpg"
-            else:
-                continue
-
+            nombre = f"{sku}.jpg"
             out_path = IMG_DIR / nombre
             pix.save(str(out_path))
-            rutas[nombre.replace('.jpg', '')] = str(out_path)
-        except Exception as e:
+            rutas[sku] = str(out_path)
+        except Exception:
             pass
 
     return rutas
@@ -257,9 +258,11 @@ def main():
             continue
 
         # Extraer imágenes de esta página
-        sku_izq = productos[0]['sku'] if len(productos) > 0 else None
-        sku_der = productos[1]['sku'] if len(productos) > 1 else None
-        imagenes = extraer_imagenes_pagina(doc, pagina_num - 1, sku_izq, sku_der)
+        # skus_pagina en orden: izq1, der1, izq2, der2, ... (mismo orden que parsea el texto)
+        skus_pagina = []
+        for prod in productos:
+            skus_pagina.append(prod['sku'])
+        imagenes = extraer_imagenes_pagina(doc, pagina_num - 1, skus_pagina)
 
         for prod in productos:
             sku = prod['sku']
