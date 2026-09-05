@@ -179,12 +179,17 @@ index.html
 ### Como Modificar
 
 #### Cambiar colores
-Editar variables CSS al inicio del `<style>`:
+Editar variables CSS al inicio del `<style>` (sistema Material 3 — ver DESIGN.md para el sistema completo):
 ```css
 :root {
-  --primary: #2c3e50;    /* Color principal */
-  --success: #27ae60;    /* Verde (precios, totales) */
-  --danger: #e74c3c;     /* Rojo (botones borrar) */
+  --primary: #2f4a63;          /* acero (app bar, primario) */
+  --primary-container: #d3e3f3;
+  --tertiary: #7d5600;         /* laton (PDF proveedor) */
+  --success: #1e6b45;          /* precios */
+  --error: #ba1a1a;
+  --bg: #f1f3f6;               /* pagina */
+  --surface: #ffffff;          /* tarjetas/filas */
+  --inverse-surface: #2e3135;  /* dock flotante y snackbar */
 }
 ```
 
