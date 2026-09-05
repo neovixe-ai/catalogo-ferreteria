@@ -147,7 +147,8 @@ Una app HTML+JS que corre dentro de un WebView en Android. No necesita internet.
 apk-builder/ferreteria/assets/www/
 ├── index.html                    # App principal (TODO el codigo)
 ├── data/
-│   └── productos.json            # Productos del catalogo
+│   ├── productos.js              # Productos del catalogo (window.PRODUCTOS)
+│   └── productos.json            # Mismo catalogo en JSON (para la web/app)
 └── proveedores/
     └── lc_2050/
         └── images/
@@ -163,11 +164,14 @@ index.html
 ├── <style>           # CSS completo (diseño movil)
 ├── <body>            # HTML (pantallas: lista, detalle, pedido, ajustes)
 └── <script>          # JavaScript:
+    ├── data/productos.js  # Catalogo via <script src> (window.PRODUCTOS)
     ├── IndexedDB     # Almacena productos y pedidos
     ├── localStorage  # Guarda ajustes (WhatsApp, nombre)
     ├── IntersectionObserver  # Scroll infinito
     └── wa.me links   # Envio por WhatsApp
 ```
+
+**IMPORTANTE**: El catalogo se carga con `<script src="data/productos.js">`, **NO** con `fetch()`. En Android WebView con targetSdk >= 30, `fetch()` de archivos locales sobre `file://` esta bloqueado y la app queda con los 30 productos de respaldo.
 
 ### Como Modificar
 
@@ -256,6 +260,7 @@ apk-builder/
     ├── assets/
     │   └── www/                      # La app HTML va aqui
     │       ├── index.html
+    │       ├── data/productos.js     # Catalogo (cargado con <script src>, funciona en file://)
     │       ├── data/productos.json
     │       └── proveedores/lc_2050/images/*.webp
     ├── res/

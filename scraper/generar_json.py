@@ -39,6 +39,14 @@ def generar_json(proveedor_slug):
     with open(out_file, "w", encoding="utf-8") as f:
         json.dump(productos, f, ensure_ascii=False)
 
+    # productos.js: carga el catalogo con <script src> (funciona en WebView file://,
+    # a diferencia de fetch() que esta bloqueado con targetSdk >= 30)
+    out_js = out_dir / "productos.js"
+    with open(out_js, "w", encoding="utf-8") as f:
+        f.write("window.PRODUCTOS = ")
+        json.dump(productos, f, ensure_ascii=False)
+        f.write(";")
+
     print(f"  {proveedor_slug}: {len(productos)} productos -> {out_file}")
 
     # También guardar una copia en el directorio del proveedor

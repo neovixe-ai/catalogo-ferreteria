@@ -14,6 +14,7 @@ mkdir -p "$DIST/proveedores/lc_2050/images"
 # App
 cp "$RAIZ/app/index.html" "$DIST/app/"
 cp "$RAIZ/app/data/productos.json" "$DIST/app/data/"
+cp "$RAIZ/app/data/productos.js" "$DIST/app/data/" 2>/dev/null
 
 # Imágenes (solo las que tienen SKU)
 cp "$RAIZ"/proveedores/lc_2050/images/*.jpg "$DIST/proveedores/lc_2050/images/" 2>/dev/null

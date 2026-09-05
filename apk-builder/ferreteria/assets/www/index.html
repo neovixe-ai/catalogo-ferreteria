@@ -473,6 +473,7 @@ body {
   <div class="modal" id="modalContent"></div>
 </div>
 
+<script src="data/productos.js"></script>
 <script>
 var DATA = [];
 var cart = {};
@@ -580,32 +581,29 @@ function getShortName(name) {
 }
 
 function init() {
-  fetch('data/productos.json')
-    .then(function(r) { return r.json(); })
-    .then(function(json) {
-      DATA = json;
-      saveProducts(DATA, function() {});
-      loadOrders(function(savedOrders) {
-        orders = savedOrders;
-        updateCatalogInfo();
-        renderOrders();
-      });
-    })
-    .catch(function() {
-      loadProducts(function(saved) {
-        if (saved && saved.length > 0) {
-          DATA = saved;
-        } else {
-          DATA = loadEmbeddedData();
-          saveProducts(DATA, function() {});
-        }
-        loadOrders(function(savedOrders) {
-          orders = savedOrders;
-          updateCatalogInfo();
-          renderOrders();
-        });
-      });
+  if (window.PRODUCTOS && window.PRODUCTOS.length > 0) {
+    DATA = window.PRODUCTOS;
+    saveProducts(DATA, function() {});
+    loadOrders(function(savedOrders) {
+      orders = savedOrders;
+      updateCatalogInfo();
+      renderOrders();
     });
+    return;
+  }
+  loadProducts(function(saved) {
+    if (saved && saved.length > 0) {
+      DATA = saved;
+    } else {
+      DATA = loadEmbeddedData();
+      saveProducts(DATA, function() {});
+    }
+    loadOrders(function(savedOrders) {
+      orders = savedOrders;
+      updateCatalogInfo();
+      renderOrders();
+    });
+  });
 }
 
 function loadEmbeddedData() {
