@@ -1,0 +1,11 @@
+theme: null
+plugins: []
+exclude:
+  - "*.md"
+  - "*.py"
+  - "*.bat"
+  - ".git"
+  - "scraper"
+  - "proveedores"
+  - "templates"
+  - "importadores"
