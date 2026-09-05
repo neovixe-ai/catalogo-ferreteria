@@ -1,0 +1,75 @@
+{
+  "version": "1.0",
+  "proveedor": {
+    "nombre": "DISTRIBUIDORA 2050 LC",
+    "rif": "J-50799044-3",
+    "logo": "LC"
+  },
+  "catalogo": {
+    "titulo": "Catálogo General",
+    "periodo": {
+      "formato": "DD/MM/YYYY",
+      "separador": " al ",
+      "ejemplo": "04/09/2026 al 10/09/2026"
+    },
+    "total_paginas": 176,
+    "envios_nacionales": true
+  },
+  "layout": {
+    "productos_por_pagina": 10,
+    "columnas": 2,
+    "filas": 5,
+    "disposicion": "grid"
+  },
+  "producto": {
+    "sku": {
+      "posicion": "superior_izquierda",
+      "formato": "[A-Z]{3}[0-9]{3}",
+      "ejemplos": ["COC378", "LAV012", "REF494", "VAR093"],
+      "subrayado": true
+    },
+    "imagen": {
+      "posicion": "centro_izquierda",
+      "tipo": "foto_producto",
+      "fondo": "blanco"
+    },
+    "nombre": {
+      "posicion": "derecha_imagen",
+      "alineacion": "izquierda",
+      "case": "MAYUSCULAS",
+      "max_lineas": 3,
+      "notas": "Puede partirse con guiones al final de línea"
+    },
+    "precio": {
+      "posicion": "inferior_izquierda",
+      "formato": "[0-9]+,[0-9]+\\$",
+      "separador_decimal": "coma",
+      "simbolo_moneda": "$",
+      "subrayado": true,
+      "ejemplos": ["0,31$", "8,00$", "33,34$"]
+    }
+  },
+  "prefijos_sku": {
+    "COC": "Cocina",
+    "LAV": "Lavadora",
+    "REF": "Refrigerador",
+    "VAR": "Varios",
+    "SUM": "Suministros",
+    "VEN": "Ventilador"
+  },
+  "extraccion": {
+    "metodo": "pdftotext_layout",
+    "columnas.detectar_por": "posicion_fija",
+    "columnas.posiciones": {
+      "izquierda": {"x_min": 0, "x_max": 50},
+      "derecha": {"x_min": 50, "x_max": 100}
+    },
+    "notas": [
+      "Usar pdftotext -layout para mantener posiciones",
+      "Los productos están en cajas delimitadas visualmente",
+      "El precio siempre termina en $",
+      "Los nombres pueden estar partidos con guiones"
+    ]
+  },
+  "paginas_muestra": [1, 2, 3, 31, 76, 81, 141, 165]
+}

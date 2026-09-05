@@ -1,83 +1,128 @@
 # Catálogo de Ferretería
 
-Scraper genérico y reutilizable para descargar catálogos de productos de proveedores de ferretería. Cada proveedor tiene su propia carpeta con base de datos SQLite e imágenes descargadas.
+Sistema de extracción de catálogos de ferretería desde PDFs.
+
+## Arquitectura
+
+```
+┌─────────────────┐     ┌──────────────────┐     ┌─────────────────┐
+│   PDF Catálogo  │ ──→ │  IA con Visión   │ ──→ │ template.json   │
+└─────────────────┘     └──────────────────┘     └─────────────────┘
+                                                       │
+┌─────────────────┐     ┌──────────────────┐           │
+│  Nuevo PDF      │ ──→ │  Extractor       │ ←─────────┘
+└─────────────────┘     └──────────────────┘
+                               │
+                               ▼
+                        ┌──────────────────┐
+                        │  SQLite + Images │
+                        └──────────────────┘
+```
+
+## Uso rápido
+
+### Agregar un nuevo proveedor
+
+1. **Analizar con IA** (ver `AGENTS.md`):
+   - Convertir PDF a imágenes
+   - Identificar patrones (SKU, precio, layout)
+   - Crear template JSON
+
+2. **Extraer catálogo**:
+   ```bash
+   python scraper/extractor.py --pdf "catalogo.pdf"
+   ```
+
+3. **Verificar resultados**:
+   ```bash
+   sqlite3 proveedores/{proveedor}/catalogo.db "SELECT COUNT(*) FROM productos"
+   ls proveedores/{proveedor}/images/
+   ```
+
+### Agregar catálogo de proveedor existente
+
+```bash
+python scraper/extractor_con_actualizacion.py --pdf "nuevo_catalogo.pdf"
+```
+
+La lógica de fechas asegura:
+- Precios de catálogos más nuevos prevalecen
+- Productos nuevos se agregan
+- No se duplican SKUs existentes
 
 ## Estructura
 
 ```
 catalogo-ferreteria/
 ├── scraper/
-│   ├── scraper.py              # Script genérico reutilizable
-│   ├── requirements.txt        # Dependencias Python
-│   └── config_example.json     # Ejemplo de configuración
-│
-├── importadores/
-│   └── exportar_csv.py         # Exportador → CSV para Excel
-│
+│   ├── extractor_con_posiciones.py    # Extracción con imágenes
+│   ├── extractor_con_actualizacion.py # Lógica de fechas
+│   └── test_template.py              # Pruebas
+├── templates/
+│   └── lc_2050.json                   # Template del proveedor
 ├── proveedores/
-│   └── mi_proveedor/
-│       ├── config.json         # Configuración del proveedor
-│       ├── catalogo.db         # SQLite con productos
-│       └── images/             # Imágenes descargadas
-│       ├── config.json
-│       ├── catalogo.db
-│       └── images/
-│
-└── README.md
+│   └── lc_2050/
+│       ├── catalogo.db                # SQLite (1,725+ productos)
+│       └── images/                    # Imágenes extraídas
+├── AGENTS.md                          # Guía para IA
+└── README.md                          # Este archivo
 ```
 
-## Instalación
+## Template JSON
 
-```bash
-pip install -r scraper/requirements.txt
+El template define las reglas de extracción. Ejemplo:
+
+```json
+{
+  "proveedor": { "nombre": "...", "rif": "..." },
+  "layout": { "columnas": 2, "filas": 5 },
+  "producto": {
+    "sku": { "formato": "[A-Z]{3}[0-9]{3}" },
+    "precio": { "formato": "[0-9]+,[0-9]+\\$" }
+  }
+}
 ```
 
-## Uso
+Ver `templates/lc_2050.json` como ejemplo completo.
 
-### Scraping de un proveedor
+## Base de Datos
 
-```bash
-# Modo piloto (20 productos de prueba)
-python scraper/scraper.py --proveedor mi_proveedor --piloto
+**Esquema:**
+- `sku`: Código único del producto
+- `nombre`: Descripción del producto
+- `precio_texto`: Precio con formato original
+- `imagen_path`: Ruta a la imagen
+- `fecha_catalogo`: Fecha del catálogo de origen
 
-# Catálogo completo
-python scraper/scraper.py --proveedor mi_proveedor
-```
-
-### Nuevo proveedor
-
-1. Crear carpeta: `mkdir -p proveedores/mi_proveedor/images`
-2. Copiar config: `cp scraper/config_example.json proveedores/mi_proveedor/config.json`
-3. Editar config.json con los datos del proveedor
-4. Ejecutar: `python scraper/scraper.py --proveedor mi_proveedor`
-
-### Exportar a CSV
-
-```bash
-python importadores/exportar_csv.py --proveedor mi_proveedor
-```
-
-## Base de Datos SQLite
-
-El catálogo se guarda en `proveedores/{nombre}/catalogo.db` con este esquema:
-
-- **categorias**: id, nombre, slug, parent_id, total_productos
-- **productos**: id, sku, nombre, descripcion, marca, categoria_id, url_original, imagen_principal, precio_texto
-- **producto_meta**: id, producto_id, clave, valor (datos flexibles: stock, dimensiones, etc.)
-- **imagenes**: id, producto_id, url_original, local_path, es_principal
-
-### Consultas útiles
-
+**Consultas útiles:**
 ```sql
--- Productos por categoría
-SELECT c.nombre, COUNT(*) FROM productos p
-JOIN categorias c ON p.categoria_id = c.id
-GROUP BY c.nombre ORDER BY COUNT(*) DESC;
+-- Productos con precio
+SELECT sku, nombre, precio_texto 
+FROM productos 
+WHERE precio_texto IS NOT NULL;
 
 -- Buscar producto
-SELECT * FROM productos WHERE nombre LIKE '%compresor%';
+SELECT * FROM productos 
+WHERE nombre LIKE '%compresor%';
 
--- Productos con imagen
-SELECT sku, nombre, imagen_principal FROM productos
-WHERE imagen_principal IS NOT NULL AND imagen_principal != '';
+-- Productos por fecha de catálogo
+SELECT fecha_catalogo, COUNT(*) 
+FROM productos 
+GROUP BY fecha_catalogo;
 ```
+
+## Herramientas
+
+| Herramienta | Uso |
+|-------------|-----|
+| `pdftotext -layout` | Extraer texto manteniendo posiciones |
+| `PyMuPDF (fitz)` | Extraer imágenes con coordenadas |
+| `sqlite3` | Consultar base de datos |
+
+## Proveedor actual
+
+**LC 2050** (DISTRIBUIDORA 2050 LC):
+- RIF: J-50799044-3
+- Template: `templates/lc_2050.json`
+- Catálogos: Sep 2026, Ago 2026
+- Productos: ~1,725
