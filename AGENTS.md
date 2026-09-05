@@ -1,10 +1,74 @@
 # AGENTS.md — Guía para IA: Cómo agregar un nuevo proveedor
 
+## Modelo Operacional
+
+### Cómo funciona el sistema
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  USUARIO                                                   │
+│  "Quiero agregar el proveedor X con este catálogo PDF"     │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│  IA - ACCIONES                                              │
+│  1. git pull (obtener repo actualizado)                    │
+│  2. Analizar PDF con visión                                │
+│  3. Crear template                                         │
+│  4. Extraer productos                                      │
+│  5. Guardar en DB + imágenes                               │
+│  6. git commit + push (subir cambios)                      │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│  GITHUB                                                    │
+│  - Repo actualizado                                        │
+│  - DB sincronizada                                         │
+│  - Imágenes del proveedor                                  │
+│  - Template del proveedor                                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Entornos soportados
+
+| Entorno | Comando inicial |
+|---------|-----------------|
+| **Termux** | `cd ~/catalogo-ferreteria && git pull` |
+| **Linux** | `cd ~/catalogo-ferreteria && git pull` |
+| **Windows** | `cd %USERPROFILE%\catalogo-ferreteria && git pull` |
+
+### Flujo de trabajo estándar
+
+```bash
+# 1. Actualizar repositorio
+git pull
+
+# 2. Ejecutar operación (ej: agregar catálogo)
+python scraper/extractor.py --pdf "nuevo_catalogo.pdf"
+
+# 3. Subir cambios
+git add .
+git commit -m "feat: agregar catálogo [Proveedor] [Fecha]"
+git push
+```
+
+### Reglas de sincronización
+
+- **SIEMPRE** hacer `git pull` antes de trabajar
+- **SIEMPRE** hacer `git push` después de cambios
+- La DB en GitHub es la fuente de verdad
+- No trabajar sin conexión (offline)
+
+---
+
 ## Flujo de trabajo cuando llega un catálogo PDF
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  1. RECIBIR PDF                                             │
+│     ├─→ git pull (asegurar repo actualizado)               │
 │     └─→ Convertir primeras 3 páginas a imágenes (visión)   │
 └─────────────────────────────────────────────────────────────┘
                             │
@@ -65,7 +129,7 @@
               ▼
 ┌─────────────────────────────────────────────────────────────┐
 │  A4. SI HAY OTRO CATÁLOGO → Repetir desde A2 con nuevo PDF │
-│     SI NO HAY → Proceso completo                            │
+│     SI NO HAY → git commit + push                           │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -107,6 +171,7 @@
 │     ├─→ Ejecutar extractor con lógica de fechas            │
 │     ├─→ Productos nuevos se insertan                        │
 │     ├─→ Precios de catálogo más nuevo prevalecen           │
+│     ├─→ git commit + push                                   │
 │     └─→ Generar reporte de cambios                          │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -117,11 +182,17 @@
 
 ### Capacidades necesarias:
 - **Visión**: Para analizar imágenes del PDF y verificar extracción
-- **Terminal**: Para ejecutar scripts Python
+- **Terminal**: Para ejecutar scripts Python y comandos git
 - **Archivos**: Para leer/escribir templates y scripts
 
 ### Herramientas del sistema:
 ```bash
+# Git
+git pull
+git add .
+git commit -m "mensaje"
+git push
+
 # Conversión PDF → imágenes
 pdftoppm -jpeg -r 150 -f 1 -l 3 "catalogo.pdf" temp/page
 
